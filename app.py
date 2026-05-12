@@ -8,28 +8,34 @@ CORS(app)
 def init_db():
     conn = sqlite3.connect('inventario.db')
     c = conn.cursor()
+    # Tabla de productos
     c.execute('''CREATE TABLE IF NOT EXISTS productos
                  (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, categoria TEXT, precio TEXT, imagen TEXT)''')
+    # Tabla de configuración (Misión/Visión)
     c.execute('''CREATE TABLE IF NOT EXISTS configuracion (clave TEXT PRIMARY KEY, valor TEXT)''')
+    # Tabla de servicios
     c.execute('''CREATE TABLE IF NOT EXISTS servicios
                  (id INTEGER PRIMARY KEY AUTOINCREMENT, icono TEXT, titulo TEXT, descripcion TEXT)''')
+    # Tabla de beneficios (Por qué elegirnos)
     c.execute('''CREATE TABLE IF NOT EXISTS beneficios
                  (id INTEGER PRIMARY KEY AUTOINCREMENT, icono TEXT, titulo TEXT, descripcion TEXT)''')
     
-    # Datos iniciales de Misión/Visión
+    # Datos iniciales si están vacíos
     c.execute("INSERT OR IGNORE INTO configuracion VALUES ('mision', 'Nuestra misión es brindar soporte técnico de alta calidad...')")
     c.execute("INSERT OR IGNORE INTO configuracion VALUES ('vision', 'Ser líderes en soluciones tecnológicas y seguridad...')")
     
-    # Beneficios por defecto
+    # Check de Servicios
+    c.execute("SELECT COUNT(*) FROM servicios")
+    if c.fetchone()[0] == 0:
+        s_ini = [('📹', 'Cámaras', 'Sistemas CCTV.'), ('💻', 'PC/Mac', 'Soporte experto.'), ('📱', 'Apple', 'Reparación iPhone.')]
+        c.executemany("INSERT INTO servicios (icono, titulo, descripcion) VALUES (?, ?, ?)", s_ini)
+    
+    # Check de Beneficios
     c.execute("SELECT COUNT(*) FROM beneficios")
     if c.fetchone()[0] == 0:
-        bens = [
-            ('🛡️', 'Garantía Real', 'Todos nuestros trabajos cuentan con respaldo total.'),
-            ('⚡', 'Servicio Rápido', 'Entendemos que tu tiempo es valioso.'),
-            ('👨‍🔧', 'Expertos Certificados', 'Técnicos especialistas en Apple y Seguridad.')
-        ]
-        c.executemany("INSERT INTO beneficios (icono, titulo, descripcion) VALUES (?, ?, ?)", bens)
-    
+        b_ini = [('🛡️', 'Garantía', 'Respaldo total.'), ('⚡', 'Rapidez', 'Entrega ágil.'), ('👨‍🔧', 'Expertos', 'Técnicos certificados.')]
+        c.executemany("INSERT INTO beneficios (icono, titulo, descripcion) VALUES (?, ?, ?)", b_ini)
+        
     conn.commit()
     conn.close()
 
@@ -63,23 +69,6 @@ def manejar_config():
     conn.close()
     return jsonify(res)
 
-@app.route('/api/beneficios', methods=['GET', 'POST'])
-def manejar_beneficios():
-    conn = sqlite3.connect('inventario.db')
-    c = conn.cursor()
-    if request.method == 'POST':
-        data = request.json
-        c.execute("DELETE FROM beneficios")
-        for b in data:
-            c.execute("INSERT INTO beneficios (icono, titulo, descripcion) VALUES (?, ?, ?)", 
-                      (b['icono'], b['titulo'], b['descripcion']))
-        conn.commit()
-        return jsonify({"mensaje": "✅ Beneficios actualizados"})
-    c.execute("SELECT * FROM beneficios")
-    res = [{"id": r[0], "icono": r[1], "titulo": r[2], "descripcion": r[3]} for r in c.fetchall()]
-    conn.close()
-    return jsonify(res)
-
 @app.route('/api/servicios', methods=['GET', 'POST'])
 def manejar_servicios():
     conn = sqlite3.connect('inventario.db')
@@ -88,12 +77,27 @@ def manejar_servicios():
         data = request.json
         c.execute("DELETE FROM servicios")
         for s in data:
-            c.execute("INSERT INTO servicios (icono, titulo, descripcion) VALUES (?, ?, ?)", 
-                      (s['icono'], s['titulo'], s['descripcion']))
+            c.execute("INSERT INTO servicios (icono, titulo, descripcion) VALUES (?, ?, ?)", (s['icono'], s['titulo'], s['descripcion']))
         conn.commit()
         return jsonify({"mensaje": "✅ Servicios actualizados"})
     c.execute("SELECT * FROM servicios")
-    res = [{"id": r[0], "icono": r[1], "titulo": r[2], "descripcion": r[3]} for r in c.fetchall()]
+    res = [{"icono": r[1], "titulo": r[2], "descripcion": r[3]} for r in c.fetchall()]
+    conn.close()
+    return jsonify(res)
+
+@app.route('/api/beneficios', methods=['GET', 'POST'])
+def manejar_beneficios():
+    conn = sqlite3.connect('inventario.db')
+    c = conn.cursor()
+    if request.method == 'POST':
+        data = request.json
+        c.execute("DELETE FROM beneficios")
+        for b in data:
+            c.execute("INSERT INTO beneficios (icono, titulo, descripcion) VALUES (?, ?, ?)", (b['icono'], b['titulo'], b['descripcion']))
+        conn.commit()
+        return jsonify({"mensaje": "✅ Beneficios actualizados"})
+    c.execute("SELECT * FROM beneficios")
+    res = [{"icono": r[1], "titulo": r[2], "descripcion": r[3]} for r in c.fetchall()]
     conn.close()
     return jsonify(res)
 
