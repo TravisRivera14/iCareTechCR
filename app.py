@@ -20,13 +20,12 @@ def init_db():
     c.execute("SELECT COUNT(*) FROM servicios")
     if c.fetchone()[0] == 0:
         servs = [
-            ('📹', 'Cámaras de Seguridad', 'Sistemas de vigilancia inteligentes para tu hogar.'),
-            ('💻', 'Soporte Computadoras', 'Reparación y mantenimiento preventivo profesional.'),
-            ('📱', 'Servicio Apple', 'Especialistas en iPhone, iPad y Mac.'),
-            ('🌐', 'Desarrollo Web', 'Creamos tu presencia digital a medida.')
+            ('📹', 'Seguridad Electrónica', 'Sistemas inteligentes de vigilancia CCTV.'),
+            ('💻', 'Soporte Computacional', 'Mantenimiento experto para Mac y PC.'),
+            ('📱', 'Especialistas Apple', 'Reparación profesional de iPhone y iPad.'),
+            ('🌐', 'Soluciones Web', 'Diseño de plataformas digitales modernas.')
         ]
         c.executemany("INSERT INTO servicios (icono, titulo, descripcion) VALUES (?, ?, ?)", servs)
-    
     conn.commit()
     conn.close()
 

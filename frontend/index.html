@@ -3,119 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iCare Tech CR | Apple & Security</title>
+    <title>iCare Tech CR | Apple Professional Service</title>
     <style>
-        :root { --brand: #1b4332; --brand-hover: #2d6a4f; --text: #1d1d1f; --muted: #86868b; --bg: #f5f5f7; --shadow: 0 8px 30px rgba(0,0,0,0.04); }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background: white; color: var(--text); scroll-behavior: smooth; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        :root { --apple-black: #1d1d1f; --apple-grey: #86868b; --apple-bg: #f5f5f7; --brand: #1b4332; --white: #ffffff; }
         
-        /* Navbar */
-        header { background: rgba(255,255,255,0.8); backdrop-filter: saturate(180%) blur(20px); position: sticky; top:0; z-index:100; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .navbar { display: flex; justify-content: space-between; align-items: center; height: 60px; }
-        .logo { font-weight: 700; font-size: 19px; letter-spacing: -0.5px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif; }
+        body { background-color: var(--white); color: var(--apple-black); -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+        .container { max-width: 1060px; margin: 0 auto; padding: 0 22px; }
 
-        /* Hero */
-        .hero { padding: 100px 0; text-align: center; }
-        .hero h1 { font-size: 56px; font-weight: 700; letter-spacing: -1px; line-height: 1.1; margin-bottom: 20px; }
-        .hero h1 span { color: var(--brand); }
-        .hero p { font-size: 21px; color: var(--muted); max-width: 600px; margin: 0 auto 30px; }
+        /* Header Premium con Blur */
+        header { background: rgba(255, 255, 255, 0.7); backdrop-filter: saturate(180%) blur(20px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.08); }
+        .nav { display: flex; justify-content: space-between; align-items: center; height: 52px; }
+        .logo { font-size: 19px; font-weight: 600; letter-spacing: -0.022em; cursor: pointer; }
+        .nav-links { display: flex; gap: 30px; font-size: 12px; color: var(--apple-grey); font-weight: 400; }
+        .nav-links a:hover { color: var(--apple-black); text-decoration: none; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
 
-        /* Grid Servicios (Estilo Apple) */
-        .section-title { text-align: center; font-size: 40px; font-weight: 700; margin-bottom: 50px; }
-        .srv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; padding-bottom: 80px; }
-        .srv-card { background: var(--bg); padding: 40px; border-radius: 28px; text-align: center; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid transparent; }
-        .srv-card:hover { transform: scale(1.02); background: white; box-shadow: var(--shadow); border-color: #e5e5e5; }
-        .srv-icon { font-size: 48px; margin-bottom: 20px; display: block; }
-        .srv-card h3 { font-size: 21px; font-weight: 600; margin-bottom: 12px; }
-        .srv-card p { font-size: 15px; color: var(--muted); line-height: 1.5; }
+        /* Hero Apple Style */
+        .hero { padding: 120px 0 80px; text-align: center; }
+        .hero h1 { font-size: 64px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.05; margin-bottom: 15px; }
+        .hero p { font-size: 24px; color: var(--apple-grey); max-width: 700px; margin: 0 auto 30px; font-weight: 400; }
+        .btn-link { color: #0066cc; font-size: 21px; font-weight: 400; }
+        .btn-link:hover { text-decoration: underline; }
 
-        /* About (Misión/Visión) */
-        .about { background: var(--bg); padding: 80px 0; }
+        /* Secciones Limpias */
+        .section-title { font-size: 40px; font-weight: 600; letter-spacing: -0.009em; text-align: center; margin-bottom: 50px; padding-top: 80px; }
+        
+        /* Grid de Servicios (Estilo Replicado) */
+        .srv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 100px; }
+        .srv-card { background: var(--apple-bg); padding: 50px 30px; border-radius: 30px; text-align: center; transition: all 0.5s cubic-bezier(0, 0, 0.5, 1); }
+        .srv-card:hover { transform: scale(1.01); background: #fff; box-shadow: 0 20px 40px rgba(0,0,0,0.04); }
+        .srv-icon { font-size: 52px; margin-bottom: 25px; display: block; }
+        .srv-card h3 { font-size: 21px; font-weight: 600; margin-bottom: 15px; }
+        .srv-card p { font-size: 16px; color: var(--apple-grey); line-height: 1.47; }
+
+        /* Misión / Visión (Cards de Alta Gama) */
+        .about-wrap { background: var(--apple-bg); padding: 100px 0; border-radius: 0; }
         .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-        .about-box { background: white; padding: 40px; border-radius: 28px; box-shadow: var(--shadow); }
-        .about-box h3 { font-size: 24px; margin-bottom: 15px; color: var(--brand); }
-        .about-box p { color: var(--muted); line-height: 1.6; font-size: 16px; }
+        .about-box { background: var(--white); padding: 60px; border-radius: 30px; }
+        .about-box h3 { font-size: 28px; font-weight: 600; margin-bottom: 20px; color: var(--brand); }
+        .about-box p { font-size: 17px; color: var(--apple-grey); line-height: 1.5; }
 
-        /* Catálogo */
-        .catalog { padding: 80px 0; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-        .prod-card { background: white; border: 1px solid #e5e5e5; border-radius: 20px; padding: 20px; text-align: center; transition: 0.3s; }
-        .prod-card:hover { box-shadow: var(--shadow); }
-        .prod-img { width: 100%; height: 160px; object-fit: contain; margin-bottom: 15px; }
-        
-        .btn { padding: 12px 24px; border-radius: 99px; text-decoration: none; font-weight: 600; display: inline-block; transition: 0.3s; }
-        .btn-brand { background: var(--brand); color: white; }
-        .btn-brand:hover { background: var(--brand-hover); }
-        .wa-float { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; font-size: 28px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); z-index: 1000; }
-        
-        @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 40px; } }
+        /* Catálogo de Productos Apple Style */
+        .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; padding-bottom: 100px; }
+        .prod-card { text-align: center; padding: 30px; border-radius: 20px; transition: 0.3s; }
+        .prod-card:hover { background: var(--apple-bg); }
+        .prod-img { width: 100%; height: 200px; object-fit: contain; margin-bottom: 20px; }
+        .prod-name { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+        .prod-price { font-size: 14px; color: var(--apple-grey); margin-bottom: 15px; }
+        .btn-buy { background: #0071e3; color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+
+        /* Floating WA */
+        .wa { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; font-size: 30px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); z-index: 2000; }
+
+        @media (max-width: 768px) { .hero h1 { font-size: 44px; } .about-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="container navbar">
+        <div class="container nav">
             <div class="logo">iCare Tech CR</div>
-            <a href="#" class="btn btn-brand" onclick="openWA('Hola, necesito información.')">Contacto</a>
+            <div class="nav-links">
+                <a href="#servicios">Servicios</a>
+                <a href="#about">Nosotros</a>
+                <a href="#catalogo">Catálogo</a>
+            </div>
+            <a href="#" class="btn-buy" onclick="openWA('Quiero cotizar un servicio')">Contacto</a>
         </div>
     </header>
 
     <section class="hero container">
-        <h1>Servicio técnico <span>especializado.</span></h1>
-        <p>Soluciones integrales para tus dispositivos Apple, sistemas de seguridad y tecnología.</p>
+        <h1>Servicio técnico <span>profesional.</span></h1>
+        <p>Especialistas en Apple y seguridad electrónica con los estándares de calidad más altos del mercado.</p>
+        <a href="#catalogo" class="btn-link">Ver catálogo ></a>
     </section>
 
-    <section class="container">
+    <section id="servicios" class="container">
         <h2 class="section-title">Nuestros Servicios</h2>
-        <div class="srv-grid" id="serv-container"></div>
+        <div class="srv-grid" id="srv-container"></div>
     </section>
 
-    <section class="about">
+    <section id="about" class="about-wrap">
         <div class="container">
-            <h2 class="section-title">Sobre Nosotros</h2>
             <div class="about-grid">
                 <div class="about-box">
-                    <h3>🎯 Nuestra Misión</h3>
+                    <h3>Misión</h3>
                     <p id="txt-mision"></p>
                 </div>
                 <div class="about-box">
-                    <h3>🚀 Nuestra Visión</h3>
+                    <h3>Visión</h3>
                     <p id="txt-vision"></p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="container catalog">
-        <h2 class="section-title">Productos</h2>
-        <div class="product-grid" id="prod-container"></div>
+    <section id="catalogo" class="container">
+        <h2 class="section-title">Catálogo</h2>
+        <div class="prod-grid" id="prod-container"></div>
     </section>
 
-    <a href="#" class="wa-float" onclick="openWA('Hola iCare Tech')">💬</a>
+    <a href="#" class="wa" onclick="openWA('Hola, necesito ayuda técnica.')">💬</a>
 
     <script>
         const API = 'http://127.0.0.1:5001/api';
         function openWA(m) { window.open(`https://wa.me/50685836365?text=${encodeURIComponent(m)}`); }
 
         document.addEventListener("DOMContentLoaded", () => {
+            // Servicios
             fetch(`${API}/servicios`).then(r=>r.json()).then(data => {
-                const c = document.getElementById('serv-container');
+                const c = document.getElementById('srv-container');
                 data.forEach(s => {
                     c.innerHTML += `<div class="srv-card"><span class="srv-icon">${s.icono}</span><h3>${s.titulo}</h3><p>${s.descripcion}</p></div>`;
                 });
             });
-
-            fetch(`${API}/productos`).then(r=>r.json()).then(data => {
-                const c = document.getElementById('prod-container');
-                data.forEach(p => {
-                    c.innerHTML += `<div class="prod-card"><img src="${p.imagen}" class="prod-img" onerror="this.src='https://via.placeholder.com/150'"><h3>${p.nombre}</h3><p style="color:var(--muted); font-size:14px; margin:10px 0;">${p.precio}</p><a href="#" class="btn btn-brand" style="font-size:12px; padding:8px 16px;" onclick="openWA('Interés en: ${p.nombre}')">Consultar</a></div>`;
-                });
-            });
-
+            // Config
             fetch(`${API}/config`).then(r=>r.json()).then(d => {
                 document.getElementById('txt-mision').innerText = d.mision;
                 document.getElementById('txt-vision').innerText = d.vision;
+            });
+            // Productos
+            fetch(`${API}/productos`).then(r=>r.json()).then(data => {
+                const c = document.getElementById('prod-container');
+                data.forEach(p => {
+                    c.innerHTML += `<div class="prod-card"><img src="${p.imagen}" class="prod-img" onerror="this.src='https://via.placeholder.com/200?text=iCare+Tech'"> <div class="prod-name">${p.nombre}</div> <div class="prod-price">${p.precio}</div> <a href="#" class="btn-buy" onclick="openWA('Interés en: ${p.nombre}')">Consultar</a> </div>`;
+                });
             });
         });
     </script>
