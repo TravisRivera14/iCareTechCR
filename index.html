@@ -1,631 +1,220 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>iCare Tech CR - Reparación y Tecnología</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iCare Tech CR | Soluciones Tecnológicas</title>
+    <style>
+        /* =========================================
+           ESTRUCTURA BASE Y VARIABLES DE DISEÑO
+           ========================================= */
+        :root {
+            --bg-body: #F8F9FA;
+            --bg-card: #FFFFFF;
+            --text-main: #2D3748;
+            --text-muted: #718096;
+            --brand-primary: #1b4332; /* Verde corporativo */
+            --brand-hover: #2d6a4f;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --shadow-sm: 0 4px 6px rgba(0,0,0,0.04);
+            --shadow-md: 0 10px 25px rgba(0,0,0,0.08);
+            --radius: 16px;
+        }
 
-  <style>
-    /* =========================================
-       PALETA DE COLORES - LIGHT MODE ELEGANTE
-       ========================================= */
-    :root {
-      --bg: #F8F9FA; /* Gris perla ultra claro para el fondo */
-      --panel: #FFFFFF; /* Blanco puro para las tarjetas */
-      --panel2: #F1F3F5; /* Gris muy suave para elementos secundarios */
-      --stroke: rgba(0, 0, 0, 0.08); /* Bordes muy sutiles */
-      
-      --text: #2D3748; /* Gris oscuro elegante, muy legible */
-      --muted: #718096; /* Gris medio para subtítulos */
-      
-      --brand: #1b4332; /* Verde bosque corporativo */
-      --brand2: #2d6a4f; /* Verde esmeralda secundario */
-      --brand-fade: rgba(27, 67, 50, 0.06); /* Fondo sutil verde */
-      
-      --shadow: 0 12px 30px rgba(0, 0, 0, 0.06); /* Sombra difuminada premium */
-      --r: 18px; /* Bordes redondeados Apple-style */
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      color: var(--text);
-      background-color: var(--bg);
-      background-image: radial-gradient(circle at 50% 0%, #FFFFFF 0%, transparent 70%);
-      overflow-x: hidden;
-    }
-    a { color: inherit; text-decoration: none; }
-    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 18px; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
 
-    /* Topbar */
-    .topbar {
-      position: sticky; top: 0; z-index: 50;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      background: rgba(248, 249, 250, 0.85);
-      border-bottom: 1px solid var(--stroke);
-    }
-    .topbar .row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 0; gap: 14px;
-    }
-    .brand {
-      display: flex; align-items: center; gap: 10px;
-      font-weight: 800; letter-spacing: .2px; white-space: nowrap; color: var(--text);
-    }
-    .logo {
-      width: 34px; height: 34px; border-radius: 10px;
-      background: var(--brand);
-      box-shadow: 0 8px 15px var(--brand-fade);
-      overflow: hidden; display: grid; place-items: center;
-    }
-    .logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        /* Contenedor principal para limitar el ancho */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
 
-    .nav { display: flex; align-items: center; gap: 18px; font-size: 14px; color: var(--muted); font-weight: 500;}
-    .nav a { padding: 8px 12px; border-radius: 999px; transition: all 0.2s;}
-    .nav a:hover { background: var(--panel); color: var(--brand); box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+        /* =========================================
+           DISEÑO FUNCIONAL: NAVEGACIÓN
+           ========================================= */
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-    .cta { display: flex; gap: 10px; align-items: center; }
-    .btn {
-      border: 1px solid var(--stroke);
-      background: var(--panel);
-      color: var(--text);
-      padding: 10px 18px;
-      border-radius: 999px;
-      font-weight: 600; font-size: 14px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-      cursor: pointer; transition: all 0.2s;
-    }
-    .btn:hover { background: var(--panel2); }
-    .btn.primary {
-      border: none;
-      background: var(--brand);
-      color: #ffffff;
-      box-shadow: 0 8px 20px var(--brand-fade);
-    }
-    .btn.primary:hover { background: var(--brand2); transform: translateY(-1px); }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
 
-    /* Hero */
-    .hero { padding: 54px 0 36px; }
-    .heroGrid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
-    @media (max-width: 920px) { .heroGrid { grid-template-columns: 1fr; gap: 30px; } }
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--brand-primary);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
 
-    .pill {
-      display: inline-flex; gap: 8px; align-items: center;
-      border: 1px solid var(--brand-fade);
-      background: var(--panel);
-      padding: 8px 14px;
-      border-radius: 999px;
-      color: var(--brand);
-      font-size: 13px; font-weight: 600;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-    }
-    h1 {
-      margin: 16px 0 12px;
-      font-size: clamp(34px, 4.6vw, 56px);
-      line-height: 1.05;
-      letter-spacing: -.8px;
-      color: var(--text);
-    }
-    .sub {
-      color: var(--muted); line-height: 1.6; max-width: 58ch; font-size: 16px;
-    }
-    
-    .cards3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; margin-top: 24px; }
-    @media (max-width: 720px) { .cards3 { grid-template-columns: 1fr; } }
-    
-    .miniCard {
-      border: 1px solid var(--stroke);
-      background: var(--panel);
-      border-radius: var(--r);
-      padding: 16px;
-      box-shadow: var(--shadow);
-    }
-    .miniCard b { display: block; margin-bottom: 4px; color: var(--text); }
-    .miniCard span { color: var(--muted); font-size: 13.5px; line-height: 1.4; display: block;}
+        /* =========================================
+           DISEÑO FUNCIONAL: BOTONES
+           ========================================= */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 15px;
+        }
 
-    .phoneMock {
-      border: 1px solid var(--stroke);
-      background: var(--panel);
-      border-radius: 24px;
-      padding: 16px;
-      box-shadow: var(--shadow);
-      position: relative; overflow: hidden;
-    }
-    .phoneMock:before {
-      content: ""; position: absolute; inset: -40%;
-      background: radial-gradient(circle at 20% 30%, var(--brand-fade), transparent 50%),
-                  radial-gradient(circle at 70% 70%, rgba(45,106,79,0.04), transparent 50%);
-      filter: blur(16px); pointer-events: none;
-    }
-    .phoneInner { position: relative; }
-    .phoneTitle { font-weight: 800; margin-bottom: 2px; color: var(--brand); }
-    .phoneSmall { color: var(--muted); font-size: 12.5px; margin-bottom: 16px; }
-    
-    .list { display: grid; gap: 10px; }
-    .list .item {
-      border: 1px solid var(--stroke);
-      background: var(--bg);
-      border-radius: 14px;
-      padding: 12px 14px;
-    }
-    .item .k { color: var(--muted); font-size: 12px; }
-    .item .v { font-weight: 700; margin-top: 2px; color: var(--text); }
+        .btn-primary {
+            background-color: var(--brand-primary);
+            color: #FFFFFF;
+        }
 
-    /* Sections */
-    .section { padding: 40px 0; }
-    .section h2 { margin: 0 0 10px; font-size: 32px; letter-spacing: -.5px; color: var(--text); }
-    .section p { margin: 0; color: var(--muted); font-size: 16px; }
+        .btn-primary:hover {
+            background-color: var(--brand-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
 
-    /* Venta Apple / Catálogo */
-    .saleWrap { margin-top: 24px; }
-    .accordion { display: grid; gap: 14px; }
-    
-    .acc {
-      border: 1px solid var(--stroke);
-      background: var(--panel);
-      border-radius: 18px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-      overflow: hidden;
-    }
-    .accHead {
-      width: 100%; display: flex; align-items: center; justify-content: space-between;
-      gap: 12px; padding: 16px; cursor: pointer;
-      background: var(--panel); border: 0; color: var(--text); text-align: left;
-    }
-    .accLeft { display: flex; align-items: center; gap: 14px; min-width: 0; }
-    .accIcon {
-      width: 40px; height: 40px; border-radius: 12px;
-      border: 1px solid var(--stroke);
-      background: var(--panel2);
-      display: grid; place-items: center; flex: 0 0 auto;
-    }
-    .accIcon img { width: 24px; height: 24px; object-fit: contain; display: block; }
-    .accTitle { font-weight: 700; font-size: 16px; }
-    .accHint { color: var(--muted); font-size: 13.5px; margin-top: 2px;}
-    .accRight { color: var(--brand); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
-    
-    .chev {
-      width: 28px; height: 28px; border-radius: 999px;
-      border: 1px solid var(--stroke);
-      display: grid; place-items: center;
-      background: var(--panel2); color: var(--muted);
-      transition: transform .22s ease;
-    }
-    .acc.open .chev { transform: rotate(180deg); background: var(--brand); color: #fff; border-color: var(--brand); }
-    .accBody {
-      display: none; padding: 20px;
-      background: #FBFBFC;
-      border-top: 1px solid var(--stroke);
-    }
-    .acc.open .accBody { display: block; }
+        /* =========================================
+           DISEÑO FUNCIONAL: SECCIONES Y GRID
+           ========================================= */
+        section {
+            padding: 80px 0;
+        }
 
-    /* Tarjetas de producto */
-    .grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 16px; }
-    @media (max-width: 980px){ .grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
-    @media (max-width: 520px){ .grid { grid-template-columns: 1fr; } }
+        .text-center {
+            text-align: center;
+        }
 
-    .pCard {
-      border: 1px solid var(--stroke);
-      background: var(--panel);
-      border-radius: 16px;
-      overflow: hidden; display: flex; flex-direction: column; min-height: 250px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-    }
-    .pImg {
-      height: 150px;
-      background: radial-gradient(circle at 50% 50%, var(--panel2) 0%, #E2E8F0 100%);
-      border-bottom: 1px solid var(--stroke);
-      display: grid; place-items: center; overflow: hidden;
-    }
-    .pImg img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .pBody { padding: 16px; display: grid; gap: 8px; flex-grow: 1; }
-    .pName { font-weight: 800; color: var(--text); }
-    .pMeta { color: var(--muted); font-size: 13.5px; }
-    .pBtn {
-      margin-top: auto; width: 100%;
-      border: 1px solid var(--stroke);
-      background: var(--panel);
-      color: var(--text);
-      padding: 10px 12px; border-radius: 12px;
-      font-weight: 700; cursor: pointer; transition: all 0.2s;
-    }
-    .pBtn:hover { background: var(--brand); color: #ffffff; border-color: var(--brand); }
+        .section-title {
+            font-size: 36px;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
 
-    /* Footer */
-    .footer {
-      padding: 30px 0; color: var(--muted);
-      border-top: 1px solid var(--stroke);
-      margin-top: 40px; font-size: 14px; text-align: center;
-    }
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 48px auto;
+        }
 
-    /* Mobile menu */
-    .menuBtn { display: none; }
-    @media (max-width: 820px){
-      .nav { display: none; }
-      .menuBtn { display: inline-flex; }
-      .mobileNav {
-        display: none; border-top: 1px solid var(--stroke);
-        padding: 10px 0 14px; background: var(--panel);
-        position: absolute; width: 100%; left: 0; top: 100%;
-        box-shadow: var(--shadow);
-      }
-      .mobileNav a { display: block; padding: 12px 20px; color: var(--text); font-weight: 500; border-bottom: 1px solid var(--stroke); }
-      .mobileNav a:last-child { border-bottom: none; }
-      .mobileNav a:hover { background: var(--panel2); color: var(--brand); }
-      .mobileNav.show { display: block; }
-    }
-  </style>
+        /* Cuadrícula de servicios */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 40px 32px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            background-color: rgba(27, 67, 50, 0.08); /* Fondo verde suave */
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .card-text {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            flex-grow: 1;
+        }
+
+    </style>
 </head>
-
 <body>
-  <header class="topbar">
-    <div class="wrap">
-      <div class="row">
-        <div class="brand">
-          <div class="logo" aria-hidden="true">
-            <img src="assets/img/logo.png" alt="" onerror="this.style.display='none'">
-          </div>
-          <span>iCare Tech CR</span>
+
+    <header>
+        <div class="container navbar">
+            <a href="#" class="logo">iCare Tech CR</a>
+            <button class="btn btn-primary" onclick="alert('Funcionalidad de contacto pendiente')">Contacto Rápido</button>
         </div>
+    </header>
 
-        <nav class="nav" aria-label="Navegación principal">
-          <a href="#servicios">Servicios</a>
-          <a href="#venta">Venta Apple</a>
-          <a href="#proceso">Proceso</a>
-          <a href="#faq">FAQ</a>
-          <a href="#contacto">Contacto</a>
-        </nav>
+    <main>
+        <section class="container text-center">
+            <h1 class="section-title">Tecnología que funciona.<br>Soporte que se siente.</h1>
+            <p class="section-subtitle">Reparación especializada de equipos, instalación de cámaras de seguridad y desarrollo de páginas web.</p>
+            <a href="#servicios" class="btn btn-primary">Explorar Estructura de Servicios</a>
+        </section>
 
-        <div class="cta">
-          <button class="btn menuBtn" id="menuBtn" aria-expanded="false">Menú</button>
-          <button class="btn primary" id="btnCotizarTop">Cotizar</button>
-        </div>
-      </div>
-
-      <div class="mobileNav" id="mobileNav" aria-label="Menú móvil">
-        <a href="#servicios">Servicios</a>
-        <a href="#venta">Venta Apple</a>
-        <a href="#proceso">Proceso</a>
-        <a href="#faq">FAQ</a>
-        <a href="#contacto">Contacto</a>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="wrap">
-        <div class="heroGrid">
-          <div>
-            <div class="pill">Tecnología • Reparación • Seguridad • Web</div>
-            <h1>Tecnología que funciona. <span style="color:var(--brand)">Soporte que se siente.</span></h1>
-            <p class="sub">
-              Reparación Apple (iPhone / iPad / Mac), reparación de computadoras, cámaras y alarmas de seguridad,
-              creación de páginas web modernas y <b>venta de dispositivos Apple</b>.
-            </p>
-
-            <div style="display:flex; gap:12px; margin-top:24px; flex-wrap:wrap">
-              <a class="btn primary" href="#servicios">Ver servicios</a>
-              <button class="btn" id="btnCotizarHero">Pedir cotización</button>
+        <section id="servicios" class="container" style="background-color: var(--bg-body);">
+            <div class="text-center">
+                <h2 class="section-title">Nuestras Áreas</h2>
+                <p class="section-subtitle">Bloques estructurales listos para recibir el contenido final.</p>
             </div>
 
-            <div class="cards3">
-              <div class="miniCard"><b>Diagnóstico</b><span>Claro y sin rodeos</span></div>
-              <div class="miniCard"><b>Calidad</b><span>Trabajo limpio y profesional</span></div>
-              <div class="miniCard"><b>Soporte</b><span>Te acompañamos en el proceso</span></div>
+            <div class="grid-layout">
+                <div class="card">
+                    <div class="card-icon">📱</div>
+                    <h3 class="card-title">Soporte Técnico</h3>
+                    <p class="card-text">Espacio reservado para detallar servicios de reparación de hardware y software en dispositivos móviles y computadoras.</p>
+                    <button class="btn btn-primary" style="width: 100%; background-color: var(--bg-body); color: var(--text-main); border: 1px solid var(--border-color);">Definir Acción</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">📹</div>
+                    <h3 class="card-title">Sistemas de Seguridad</h3>
+                    <p class="card-text">Espacio reservado para describir la instalación, configuración y mantenimiento de cámaras CCTV y alarmas.</p>
+                    <button class="btn btn-primary" style="width: 100%; background-color: var(--bg-body); color: var(--text-main); border: 1px solid var(--border-color);">Definir Acción</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">💻</div>
+                    <h3 class="card-title">Desarrollo Web</h3>
+                    <p class="card-text">Espacio reservado para el portafolio de creación de páginas web, tiendas online y optimización.</p>
+                    <button class="btn btn-primary" style="width: 100%; background-color: var(--bg-body); color: var(--text-main); border: 1px solid var(--border-color);">Definir Acción</button>
+                </div>
             </div>
-          </div>
+        </section>
+    </main>
 
-          <div class="phoneMock" aria-hidden="true">
-            <div class="phoneInner">
-              <div class="phoneTitle">Catálogo de Servicios</div>
-              <div class="phoneSmall">Rápido • Confiable • Profesional</div>
-              <div class="list">
-                <div class="item"><div class="k">Área 1</div><div class="v">Cámaras & Alarmas</div></div>
-                <div class="item"><div class="k">Área 2</div><div class="v">Reparación Apple</div></div>
-                <div class="item"><div class="k">Área 3</div><div class="v">Reparación de PCs</div></div>
-                <div class="item"><div class="k">Área 4</div><div class="v">Páginas Web</div></div>
-                <div class="item"><div class="k">Área 5</div><div class="v">Venta Apple</div></div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="servicios">
-      <div class="wrap">
-        <h2>Servicios</h2>
-        <p>Elegí lo que necesitás. Te guiamos en el resto.</p>
-        </div>
-    </section>
-
-    <section class="section" id="venta">
-      <div class="wrap">
-        <h2>Venta de dispositivos Apple</h2>
-        <p>Tocá una categoría para ver disponibilidad. “Quiero cotizar este” abre WhatsApp con el producto.</p>
-
-        <div class="saleWrap">
-          <div class="accordion" id="saleAccordion">
-
-            <div class="acc open" data-cat="iPhone">
-              <button class="accHead" type="button">
-                <div class="accLeft">
-                  <div class="accIcon">
-                    <img src="assets/img/products/iphone.png" alt="" onerror="this.style.display='none'">
-                  </div>
-                  <div>
-                    <div class="accTitle">iPhone</div>
-                    <div class="accHint">Modelos recientes disponibles</div>
-                  </div>
-                </div>
-                <div class="accRight">
-                  <span>Ver catálogo</span>
-                  <div class="chev">⌄</div>
-                </div>
-              </button>
-              <div class="accBody">
-                <div class="grid">
-                  <article class="pCard">
-                    <div class="pImg">
-                      <img src="assets/img/products/iphone-15-pro.png" alt="iPhone 15 Pro" onerror="this.style.display='none'">
-                    </div>
-                    <div class="pBody">
-                      <div class="pName">iPhone 15 Pro</div>
-                      <div class="pMeta">256GB • Negro Titanio</div>
-                      <button class="pBtn" data-product="iPhone 15 Pro (256GB, Negro Titanio)">Quiero cotizar este</button>
-                    </div>
-                  </article>
-
-                  <article class="pCard">
-                    <div class="pImg">
-                      <img src="assets/img/products/iphone-15.png" alt="iPhone 15" onerror="this.style.display='none'">
-                    </div>
-                    <div class="pBody">
-                      <div class="pName">iPhone 15</div>
-                      <div class="pMeta">128GB • Azul</div>
-                      <button class="pBtn" data-product="iPhone 15 (128GB, Azul)">Quiero cotizar este</button>
-                    </div>
-                  </article>
-                </div>
-              </div>
-            </div>
-
-            <div class="acc" data-cat="iPad">
-              <button class="accHead" type="button">
-                <div class="accLeft">
-                  <div class="accIcon">
-                    <img src="assets/img/products/ipad.png" alt="" onerror="this.style.display='none'">
-                  </div>
-                  <div>
-                    <div class="accTitle">iPad</div>
-                    <div class="accHint">Tablets y modelos Pro/Air</div>
-                  </div>
-                </div>
-                <div class="accRight"><span>Ver catálogo</span><div class="chev">⌄</div></div>
-              </button>
-              <div class="accBody">
-                <div class="grid">
-                  <article class="pCard">
-                    <div class="pImg">
-                      <img src="assets/img/products/ipad-air.png" alt="iPad Air" onerror="this.style.display='none'">
-                    </div>
-                    <div class="pBody">
-                      <div class="pName">iPad Air</div>
-                      <div class="pMeta">M2 • 128GB</div>
-                      <button class="pBtn" data-product="iPad Air (M2, 128GB)">Quiero cotizar este</button>
-                    </div>
-                  </article>
-                </div>
-              </div>
-            </div>
-
-            <div class="acc" data-cat="AirPods">
-              <button class="accHead" type="button">
-                <div class="accLeft">
-                  <div class="accIcon">
-                    <img src="assets/img/products/airpods.png" alt="" onerror="this.style.display='none'">
-                  </div>
-                  <div>
-                    <div class="accTitle">AirPods</div>
-                    <div class="accHint">Audífonos originales y accesorios</div>
-                  </div>
-                </div>
-                <div class="accRight"><span>Ver catálogo</span><div class="chev">⌄</div></div>
-              </button>
-              <div class="accBody">
-                <div class="grid">
-                  <article class="pCard">
-                    <div class="pImg">
-                      <img src="assets/img/products/airpods-pro.png" alt="AirPods Pro" onerror="this.style.display='none'">
-                    </div>
-                    <div class="pBody">
-                      <div class="pName">AirPods Pro</div>
-                      <div class="pMeta">2da gen • USB-C</div>
-                      <button class="pBtn" data-product="AirPods Pro (2da gen, USB-C)">Quiero cotizar este</button>
-                    </div>
-                  </article>
-                </div>
-              </div>
-            </div>
-
-            <div class="acc" data-cat="Apple Watch">
-              <button class="accHead" type="button">
-                <div class="accLeft">
-                  <div class="accIcon">
-                    <img src="assets/img/products/watch.png" alt="" onerror="this.style.display='none'">
-                  </div>
-                  <div>
-                    <div class="accTitle">Apple Watch</div>
-                    <div class="accHint">Series y correas</div>
-                  </div>
-                </div>
-                <div class="accRight"><span>Ver catálogo</span><div class="chev">⌄</div></div>
-              </button>
-              <div class="accBody">
-                <div class="grid">
-                  <article class="pCard">
-                    <div class="pImg">
-                      <img src="assets/img/products/apple-watch.png" alt="Apple Watch" onerror="this.style.display='none'">
-                    </div>
-                    <div class="pBody">
-                      <div class="pName">Apple Watch</div>
-                      <div class="pMeta">Serie • Tamaño</div>
-                      <button class="pBtn" data-product="Apple Watch (consultar serie y tamaño)">Quiero cotizar este</button>
-                    </div>
-                  </article>
-                </div>
-              </div>
-            </div>
-
-            <div class="acc" data-cat="Mac">
-              <button class="accHead" type="button">
-                <div class="accLeft">
-                  <div class="accIcon">
-                    <img src="assets/img/products/mac.png" alt="" onerror="this.style.display='none'">
-                  </div>
-                  <div>
-                    <div class="accTitle">Mac</div>
-                    <div class="accHint">MacBook, iMac y más</div>
-                  </div>
-                </div>
-                <div class="accRight"><span>Ver catálogo</span><div class="chev">⌄</div></div>
-              </button>
-              <div class="accBody">
-                <div class="grid">
-                  <article class="pCard">
-                    <div class="pImg">
-                      <img src="assets/img/products/macbook.png" alt="MacBook" onerror="this.style.display='none'">
-                    </div>
-                    <div class="pBody">
-                      <div class="pName">MacBook</div>
-                      <div class="pMeta">Modelo • Chip • RAM</div>
-                      <button class="pBtn" data-product="MacBook (consultar modelo y specs)">Quiero cotizar este</button>
-                    </div>
-                  </article>
-                </div>
-              </div>
-            </div>
-
-            <div class="acc" data-cat="Accesorios">
-              <button class="accHead" type="button">
-                <div class="accLeft">
-                  <div class="accIcon">
-                    <img src="assets/img/products/accesorios.png" alt="" onerror="this.style.display='none'">
-                  </div>
-                  <div>
-                    <div class="accTitle">Accesorios</div>
-                    <div class="accHint">Cargadores, cables, fundas, etc.</div>
-                  </div>
-                </div>
-                <div class="accRight"><span>Ver catálogo</span><div class="chev">⌄</div></div>
-              </button>
-              <div class="accBody">
-                <div class="grid">
-                  <article class="pCard">
-                    <div class="pImg">
-                      <img src="assets/img/products/cargadores.png" alt="Cargadores" onerror="this.style.display='none'">
-                    </div>
-                    <div class="pBody">
-                      <div class="pName">Cargadores</div>
-                      <div class="pMeta">USB-C • Original / Premium</div>
-                      <button class="pBtn" data-product="Cargadores (USB-C / Original / Premium)">Quiero cotizar este</button>
-                    </div>
-                  </article>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <section class="section" id="proceso">
-      <div class="wrap">
-        <h2>Proceso simple. Resultado profesional.</h2>
-        <p>Diagnóstico → Cotización → Reparación/Entrega → Soporte.</p>
-      </div>
-    </section>
-
-    <section class="section" id="faq">
-      <div class="wrap">
-        <h2>FAQ</h2>
-        <p>¿Dudas? Escribinos y te ayudamos.</p>
-      </div>
-    </section>
-
-    <section class="section" id="contacto">
-      <div class="wrap">
-        <h2>Contacto</h2>
-        <p>Presioná “Cotizar” para abrir WhatsApp.</p>
-      </div>
-    </section>
-
-    <footer class="footer">
-      <div class="wrap">
-        <div>© <span id="year"></span> iCare Tech CR</div>
-      </div>
-    </footer>
-  </main>
-
-  <script>
-    // ====== CONFIG ======
-    const PHONE = "50685836365"; // <-- tu WhatsApp (sin +)
-    const DEFAULT_MSG = "Hola, quiero una cotización de iCare Tech CR";
-
-    // Año
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    // WhatsApp helpers
-    function waLink(message){
-      return "https://wa.me/" + PHONE + "?text=" + encodeURIComponent(message);
-    }
-    function openWA(message){
-      window.open(waLink(message), "_blank", "noopener");
-    }
-
-    // Botones cotizar
-    document.getElementById("btnCotizarTop").addEventListener("click", () => openWA(DEFAULT_MSG));
-    document.getElementById("btnCotizarHero").addEventListener("click", () => openWA(DEFAULT_MSG));
-
-    // Menú móvil
-    const menuBtn = document.getElementById("menuBtn");
-    const mobileNav = document.getElementById("mobileNav");
-    if(menuBtn){
-      menuBtn.addEventListener("click", () => {
-        const isOpen = mobileNav.classList.toggle("show");
-        menuBtn.setAttribute("aria-expanded", String(isOpen));
-      });
-      mobileNav.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
-        mobileNav.classList.remove("show");
-        menuBtn.setAttribute("aria-expanded", "false");
-      }));
-    }
-
-    // Accordion
-    document.querySelectorAll(".acc").forEach(acc => {
-      const head = acc.querySelector(".accHead");
-      head.addEventListener("click", () => {
-        const open = acc.classList.toggle("open");
-        // opcional: cerrar otros
-        document.querySelectorAll(".acc").forEach(o => { if(o !== acc) o.classList.remove("open"); });
-        if(!open) acc.classList.add("open"); // mantiene uno abierto
-      });
-    });
-
-    // Botones de productos -> WhatsApp con nombre del producto
-    document.querySelectorAll(".pBtn[data-product]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const prod = btn.getAttribute("data-product");
-        openWA("Hola, quiero cotizar este producto: " + prod);
-      });
-    });
-  </script>
 </body>
 </html>
