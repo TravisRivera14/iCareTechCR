@@ -5,101 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iCare Tech CR | Soporte y Seguridad</title>
     <style>
-        /* =========================================
-           VARIABLES Y DISEÑO BASE
-           ========================================= */
-        :root {
-            --bg-body: #F8F9FA;
-            --bg-card: #FFFFFF;
-            --bg-subtle: #F1F3F5;
-            --text-main: #2D3748;
-            --text-muted: #718096;
-            --brand: #1b4332; /* Tu verde elegante */
-            --brand-hover: #2d6a4f;
-            --brand-light: rgba(27, 67, 50, 0.08);
-            --border: rgba(0, 0, 0, 0.08);
-            --shadow: 0 10px 25px rgba(0,0,0,0.05);
-            --radius: 16px;
+        :root { --brand: #1b4332; --brand-hover: #2d6a4f; --text: #2D3748; --muted: #718096; --bg: #F8F9FA; --shadow: 0 10px 30px rgba(0,0,0,0.06); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: var(--bg); color: var(--text); }
+        .container { max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+        
+        header { background: white; padding: 20px 0; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 800; font-size: 24px; color: var(--brand); }
+
+        .section { padding: 80px 0; }
+        .center-text { text-align: center; margin-bottom: 50px; }
+        .center-text h2 { font-size: 36px; margin-bottom: 15px; }
+
+        /* SERVICIOS - Estilo imagen solicitada */
+        .srv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; }
+        .srv-card { 
+            background: white; padding: 40px 30px; border-radius: 20px; text-align: center; 
+            box-shadow: var(--shadow); transition: 0.4s ease; border: 1px solid transparent;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg-body); color: var(--text-main); line-height: 1.6; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-        a { text-decoration: none; color: inherit; }
+        .srv-card:hover { transform: translateY(-10px); border-color: var(--brand); }
+        .srv-icon { font-size: 50px; margin-bottom: 20px; display: block; }
+        .srv-card h3 { font-size: 20px; margin-bottom: 15px; font-weight: 700; }
+        .srv-card p { color: var(--muted); font-size: 15px; margin-bottom: 25px; line-height: 1.6; }
         
-        /* Títulos de sección */
-        .sec-title { font-size: 32px; text-align: center; margin-bottom: 12px; letter-spacing: -0.5px; }
-        .sec-sub { text-align: center; color: var(--text-muted); margin-bottom: 48px; font-size: 16px; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .btn { padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: 600; display: inline-block; transition: 0.3s; }
+        .btn-brand { background: var(--brand); color: white; }
+        .btn-outline { border: 2px solid var(--brand); color: var(--brand); width: 100%; }
+        .btn-outline:hover { background: var(--brand); color: white; }
 
-        /* =========================================
-           NAVEGACIÓN
-           ========================================= */
-        header { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
-        .navbar { display: flex; justify-content: space-between; align-items: center; height: 75px; }
-        .logo { font-size: 22px; font-weight: 800; color: var(--brand); display: flex; align-items: center; gap: 10px; }
-        .nav-links { display: flex; gap: 24px; font-weight: 500; color: var(--text-muted); }
-        .nav-links a:hover { color: var(--brand); }
-        
-        /* Botones */
-        .btn { padding: 12px 24px; border-radius: 999px; font-weight: 600; font-size: 15px; cursor: pointer; transition: 0.2s; border: none; display: inline-flex; align-items: center; justify-content: center; }
-        .btn-primary { background: var(--brand); color: #fff; box-shadow: 0 4px 15px rgba(27,67,50,0.2); }
-        .btn-primary:hover { background: var(--brand-hover); transform: translateY(-2px); }
-        .btn-outline { background: transparent; border: 2px solid var(--brand); color: var(--brand); }
-        .btn-outline:hover { background: var(--brand-light); }
+        /* MISIÓN / VISIÓN */
+        .about { background: white; padding: 80px 0; }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .about-box { padding: 40px; background: var(--bg); border-radius: 20px; border-left: 6px solid var(--brand); }
 
-        /* =========================================
-           HERO SECTION
-           ========================================= */
-        .hero { padding: 80px 0; text-align: center; background: radial-gradient(circle at top, #fff, transparent 80%); }
-        .hero h1 { font-size: 52px; line-height: 1.1; margin-bottom: 20px; }
-        .hero h1 span { color: var(--brand); }
-        .hero p { font-size: 18px; color: var(--text-muted); max-width: 700px; margin: 0 auto 32px; }
-        .hero-btns { display: flex; gap: 16px; justify-content: center; }
-
-        /* =========================================
-           SECCIÓN MISIÓN Y VISIÓN
-           ========================================= */
-        .about-brand { padding: 60px 0; background: var(--bg-body); }
-        .about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .about-card { 
-            background: white; 
-            padding: 40px; 
-            border-radius: var(--radius); 
-            border-left: 5px solid var(--brand); 
-            box-shadow: var(--shadow);
-            transition: 0.3s;
-        }
-        .about-card h3 { color: var(--brand); font-size: 24px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-        .about-card p { color: var(--text-muted); font-size: 16px; line-height: 1.8; }
-
-        /* =========================================
-           CATÁLOGO DINÁMICO (ACORDEÓN)
-           ========================================= */
-        .catalog { padding: 80px 0; background: var(--bg-card); border-top: 1px solid var(--border); }
-        .accordion-wrapper { max-width: 900px; margin: 0 auto; display: grid; gap: 16px; }
-        .acc-item { background: var(--bg-body); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
-        .acc-header { width: 100%; padding: 20px; background: none; border: none; text-align: left; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-size: 18px; font-weight: 600; color: var(--text-main); }
-        .acc-icon { display: flex; align-items: center; gap: 16px; }
-        .icon-box { width: 48px; height: 48px; background: var(--bg-card); border-radius: 12px; display: grid; place-items: center; font-size: 24px; border: 1px solid var(--border); }
-        .chevron { transition: transform 0.3s ease; }
-        
-        .acc-content { padding: 0 20px; max-height: 0; overflow: hidden; transition: all 0.3s ease; background: #FFFFFF; }
-        .acc-item.active .acc-content { padding: 20px; max-height: 2000px; border-top: 1px solid var(--border); }
-        .acc-item.active .chevron { transform: rotate(180deg); color: var(--brand); }
-        
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-        .product-placeholder { border: 1px dashed #CBD5E0; padding: 24px; border-radius: 12px; text-align: center; color: var(--text-muted); font-size: 14px; grid-column: 1 / -1; }
-        
-        /* Tarjeta de Producto */
-        .prod-card { border: 1px solid var(--border); border-radius: 12px; padding: 16px; background: white; text-align: center; transition: 0.2s; }
-        .prod-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); border-color: var(--brand-light); }
-        .prod-img { width: 100%; height: 160px; object-fit: contain; margin-bottom: 12px; }
-        .prod-title { font-size: 16px; font-weight: bold; margin-bottom: 8px; color: var(--text-main); }
-        .prod-price { color: var(--text-muted); font-size: 14px; margin-bottom: 16px; }
-
-        /* Botón WhatsApp Flotante */
-        .float-wa { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; font-size: 32px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 999; transition: 0.3s; }
-        .float-wa:hover { transform: scale(1.1); }
+        /* WHATSAPP */
+        .wa-float { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; font-size: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); z-index: 1000; }
     </style>
 </head>
 <body>
@@ -107,139 +48,58 @@
     <header>
         <div class="container navbar">
             <div class="logo">iCare Tech CR</div>
-            <nav class="nav-links">
-                <a href="#catalogo">Catálogo</a>
-                <a href="#mision-vision">Sobre Nosotros</a>
-            </nav>
-            <button class="btn btn-primary" onclick="openWhatsApp('Hola, quisiera contactarlos.')">Contáctanos</button>
+            <a href="#" class="btn btn-brand" onclick="openWA('Hola, necesito soporte.')">Contacto</a>
         </div>
     </header>
 
-    <section class="hero container">
-        <h1>Soporte técnico <br><span>y seguridad electrónica</span></h1>
-        <p>Especialistas en Apple, reparación de equipos y sistemas de vigilancia. Tu tecnología en las mejores manos.</p>
-        <div class="hero-btns">
-            <a href="#catalogo" class="btn btn-primary">Ver Catálogo</a>
-            <a href="#" class="btn btn-outline" onclick="openWhatsApp('Hola, ocupo una revisión técnica.')">Agendar Cita</a>
+    <section class="section container">
+        <div class="center-text">
+            <h2>Catálogo de Servicios</h2>
+            <p style="color: var(--muted)">Excelencia técnica en cada solución.</p>
         </div>
+        <div class="srv-grid" id="serv-container">
+            </div>
     </section>
 
-    <section id="mision-vision" class="about-brand">
+    <section class="about">
         <div class="container about-grid">
-            <div class="about-card" id="card-mision">
-                <h3>🎯 Nuestra Misión</h3>
-                <p>Cargando misión...</p>
+            <div class="about-box">
+                <h3 style="color: var(--brand); margin-bottom: 15px;">🎯 Nuestra Misión</h3>
+                <p id="txt-mision" style="color: var(--muted); line-height: 1.7;"></p>
             </div>
-            <div class="about-card" id="card-vision">
-                <h3>🚀 Nuestra Visión</h3>
-                <p>Cargando visión...</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="catalogo" class="catalog">
-        <div class="container">
-            <h2 class="sec-title">Catálogo de Productos</h2>
-            <p class="sec-sub">Seleccioná una categoría para ver la mercadería disponible.</p>
-            
-            <div class="accordion-wrapper">
-                <div class="acc-item">
-                    <button class="acc-header" onclick="toggleAccordion(this)">
-                        <div class="acc-icon"><div class="icon-box">📱</div><span>iPhone</span></div>
-                        <span class="chevron">▼</span>
-                    </button>
-                    <div class="acc-content"><div class="product-grid" id="grid-iPhone"></div></div>
-                </div>
-
-                <div class="acc-item">
-                    <button class="acc-header" onclick="toggleAccordion(this)">
-                        <div class="acc-icon"><div class="icon-box">💻</div><span>Mac & iPad</span></div>
-                        <span class="chevron">▼</span>
-                    </button>
-                    <div class="acc-content"><div class="product-grid" id="grid-Mac"></div></div>
-                </div>
-
-                <div class="acc-item">
-                    <button class="acc-header" onclick="toggleAccordion(this)">
-                        <div class="acc-icon"><div class="icon-box">🎧</div><span>Accesorios</span></div>
-                        <span class="chevron">▼</span>
-                    </button>
-                    <div class="acc-content"><div class="product-grid" id="grid-Accesorios"></div></div>
-                </div>
-
-                <div class="acc-item">
-                    <button class="acc-header" onclick="toggleAccordion(this)">
-                        <div class="acc-icon"><div class="icon-box">📹</div><span>Cámaras de Vigilancia</span></div>
-                        <span class="chevron">▼</span>
-                    </button>
-                    <div class="acc-content"><div class="product-grid" id="grid-Camaras"></div></div>
-                </div>
+            <div class="about-box">
+                <h3 style="color: var(--brand); margin-bottom: 15px;">🚀 Nuestra Visión</h3>
+                <p id="txt-vision" style="color: var(--muted); line-height: 1.7;"></p>
             </div>
         </div>
     </section>
 
-    <a href="#" class="float-wa" onclick="openWhatsApp('Hola, necesito ayuda desde la web.'); return false;">💬</a>
+    <a href="#" class="wa-float" onclick="openWA('Hola iCare Tech')">💬</a>
 
     <script>
-        function toggleAccordion(button) {
-            const item = button.parentElement;
-            const isActive = item.classList.contains('active');
-            document.querySelectorAll('.acc-item').forEach(el => el.classList.remove('active'));
-            if (!isActive) item.classList.add('active');
-        }
-
-        function openWhatsApp(mensaje) {
-            const telefono = "50685836365"; 
-            window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`, '_blank');
-        }
+        const API = 'http://127.0.0.1:5001/api';
+        function openWA(m) { window.open(`https://wa.me/50685836365?text=${encodeURIComponent(m)}`); }
 
         document.addEventListener("DOMContentLoaded", () => {
-            const API_BASE = 'http://127.0.0.1:5001/api';
-
-            // 1. CARGAR TEXTOS (MISIÓN Y VISIÓN)
-            fetch(`${API_BASE}/config`)
-                .then(res => res.json())
-                .then(data => {
-                    document.querySelector('#card-mision p').innerText = data.mision;
-                    document.querySelector('#card-vision p').innerText = data.vision;
+            // Cargar Servicios
+            fetch(`${API}/servicios`).then(r=>r.json()).then(data => {
+                const c = document.getElementById('serv-container');
+                data.forEach(s => {
+                    c.innerHTML += `
+                    <div class="srv-card">
+                        <span class="srv-icon">${s.icono}</span>
+                        <h3>${s.titulo}</h3>
+                        <p>${s.descripcion}</p>
+                        <a href="#" class="btn btn-outline" onclick="openWA('Me interesa el servicio: ${s.titulo}')">Cotizar Servicio</a>
+                    </div>`;
                 });
+            });
 
-            // 2. CARGAR PRODUCTOS
-            const grids = {
-                'iPhone': document.getElementById('grid-iPhone'),
-                'Mac': document.getElementById('grid-Mac'),
-                'Accesorios': document.getElementById('grid-Accesorios'),
-                'Camaras': document.getElementById('grid-Camaras')
-            };
-
-            fetch(`${API_BASE}/productos`)
-                .then(res => res.json())
-                .then(productos => {
-                    Object.values(grids).forEach(g => g.innerHTML = '');
-                    
-                    if(productos.length === 0) {
-                        Object.values(grids).forEach(g => g.innerHTML = '<div class="product-placeholder">Pronto más mercadería...</div>');
-                        return;
-                    }
-
-                    productos.forEach(prod => {
-                        const html = `
-                            <div class="prod-card">
-                                <img src="${prod.imagen}" alt="${prod.nombre}" class="prod-img" onerror="this.src='https://via.placeholder.com/150?text=iCare+Tech'">
-                                <div class="prod-title">${prod.nombre}</div>
-                                <div class="prod-price">${prod.precio}</div>
-                                <button class="btn btn-outline" style="width: 100%; font-size: 12px;" onclick="openWhatsApp('Me interesa: ${prod.nombre}')">Consultar</button>
-                            </div>`;
-                        if (grids[prod.categoria]) grids[prod.categoria].innerHTML += html;
-                    });
-
-                    Object.keys(grids).forEach(key => {
-                        if (grids[key].innerHTML === '') grids[key].innerHTML = '<div class="product-placeholder">No hay productos en esta categoría.</div>';
-                    });
-                })
-                .catch(() => {
-                    Object.values(grids).forEach(g => g.innerHTML = '<div class="product-placeholder">Enciende el servidor app.py para ver el catálogo.</div>');
-                });
+            // Cargar Misión/Visión
+            fetch(`${API}/config`).then(r=>r.json()).then(d => {
+                document.getElementById('txt-mision').innerText = d.mision;
+                document.getElementById('txt-vision').innerText = d.vision;
+            });
         });
     </script>
 </body>

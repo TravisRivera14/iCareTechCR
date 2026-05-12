@@ -2,85 +2,104 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel Admin - iCare Tech CR</title>
+    <title>Panel de Control - iCare Tech CR</title>
     <style>
-        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 500px; margin-bottom: 20px; }
-        h2 { color: #1b4332; margin-top: 0; }
-        input, select, textarea, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; }
-        textarea { height: 80px; resize: none; }
-        button { background: #1b4332; color: white; font-weight: bold; border: none; cursor: pointer; }
+        body { font-family: system-ui, sans-serif; background: #f4f7f6; padding: 40px; color: #333; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        h2 { color: #1b4332; border-bottom: 2px solid #1b4332; padding-bottom: 10px; }
+        input, select, textarea, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; font-size: 15px; box-sizing: border-box;}
+        button { background: #1b4332; color: white; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; }
         button:hover { background: #2d6a4f; }
-        .nav-admin { margin-bottom: 20px; }
+        .row { display: flex; gap: 10px; }
     </style>
 </head>
 <body>
+<div class="container">
+    <h1>Administrador iCare Tech CR</h1>
 
     <div class="card">
-        <h2>🛠 Editar Textos de la Web</h2>
+        <h2>🛠 Editar Servicios</h2>
+        <div id="lista-servicios"></div>
+        <button onclick="guardarServicios()">Guardar Cambios en Servicios</button>
+    </div>
+
+    <div class="card">
+        <h2>🎯 Misión y Visión</h2>
         <form id="formConfig">
-            <label>Misión:</label>
-            <textarea id="mision_txt" placeholder="Escribe aquí la misión..."></textarea>
-            <label>Visión:</label>
-            <textarea id="vision_txt" placeholder="Escribe aquí la visión..."></textarea>
-            <button type="submit">Actualizar Misión y Visión</button>
+            <textarea id="mision" placeholder="Misión"></textarea>
+            <textarea id="vision" placeholder="Visión"></textarea>
+            <button type="submit">Actualizar Textos</button>
         </form>
     </div>
 
     <div class="card">
-        <h2>📦 Agregar Nuevo Producto</h2>
+        <h2>📦 Nuevo Producto</h2>
         <form id="formProd">
-            <input type="text" id="nombre" placeholder="Nombre del producto" required>
-            <select id="categoria">
+            <input type="text" id="pNombre" placeholder="Nombre (Ej: iPhone 15)" required>
+            <select id="pCat">
                 <option value="iPhone">iPhone</option>
                 <option value="Mac">Mac & iPad</option>
                 <option value="Accesorios">Accesorios</option>
-                <option value="Camaras">Cámaras de Vigilancia</option>
+                <option value="Camaras">Cámaras</option>
             </select>
-            <input type="text" id="precio" placeholder="Precio o descripción" required>
-            <input type="text" id="imagen" placeholder="Ruta de imagen (assets/img/...)" required>
-            <button type="submit">Guardar Producto</button>
+            <input type="text" id="pPrecio" placeholder="Descripción/Precio" required>
+            <input type="text" id="pImg" placeholder="Ruta Imagen (assets/img/...)">
+            <button type="submit">Agregar al Catálogo</button>
         </form>
     </div>
+</div>
 
-    <script>
-        // Cargar textos actuales al abrir
-        fetch('http://127.0.0.1:5001/api/config')
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('mision_txt').value = data.mision;
-                document.getElementById('vision_txt').value = data.vision;
+<script>
+    const API = 'http://127.0.0.1:5001/api';
+
+    // Cargar Todo
+    window.onload = () => {
+        fetch(`${API}/config`).then(r=>r.json()).then(d=>{
+            document.getElementById('mision').value = d.mision;
+            document.getElementById('vision').value = d.vision;
+        });
+
+        fetch(`${API}/servicios`).then(r=>r.json()).then(data => {
+            const cont = document.getElementById('lista-servicios');
+            data.forEach(s => {
+                cont.innerHTML += `
+                <div class="srv-block" style="background:#f9f9f9; padding:10px; margin-bottom:10px; border-radius:8px;">
+                    <div class="row">
+                        <input type="text" class="s-icon" value="${s.icono}" style="width:20%">
+                        <input type="text" class="s-title" value="${s.titulo}" style="width:80%">
+                    </div>
+                    <textarea class="s-desc">${s.descripcion}</textarea>
+                </div>`;
             });
-
-        // Guardar Textos
-        document.getElementById('formConfig').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const data = {
-                mision: document.getElementById('mision_txt').value,
-                vision: document.getElementById('vision_txt').value
-            };
-            fetch('http://127.0.0.1:5001/api/config', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
-            }).then(res => res.json()).then(d => alert(d.mensaje));
         });
+    };
 
-        // Guardar Producto
-        document.getElementById('formProd').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const prod = {
-                nombre: document.getElementById('nombre').value,
-                categoria: document.getElementById('categoria').value,
-                precio: document.getElementById('precio').value,
-                imagen: document.getElementById('imagen').value
-            };
-            fetch('http://127.0.0.1:5001/api/productos', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(prod)
-            }).then(res => res.json()).then(d => { alert(d.mensaje); document.getElementById('formProd').reset(); });
-        });
-    </script>
+    function guardarServicios() {
+        const icons = document.querySelectorAll('.s-icon');
+        const titles = document.querySelectorAll('.s-title');
+        const descs = document.querySelectorAll('.s-desc');
+        let data = [];
+        for(let i=0; i<icons.length; i++) {
+            data.push({ icono: icons[i].value, titulo: titles[i].value, descripcion: descs[i].value });
+        }
+        fetch(`${API}/servicios`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) })
+        .then(r=>r.json()).then(d=>alert(d.mensaje));
+    }
+
+    document.getElementById('formConfig').onsubmit = (e) => {
+        e.preventDefault();
+        fetch(`${API}/config`, { method:'POST', headers:{'Content-Type':'application/json'}, 
+            body:JSON.stringify({ mision: document.getElementById('mision').value, vision: document.getElementById('vision').value })
+        }).then(r=>r.json()).then(d=>alert(d.mensaje));
+    };
+
+    document.getElementById('formProd').onsubmit = (e) => {
+        e.preventDefault();
+        const p = { nombre: document.getElementById('pNombre').value, categoria: document.getElementById('pCat').value, precio: document.getElementById('pPrecio').value, imagen: document.getElementById('pImg').value };
+        fetch(`${API}/productos`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(p) })
+        .then(r=>r.json()).then(d=>{ alert(d.mensaje); location.reload(); });
+    };
+</script>
 </body>
 </html>

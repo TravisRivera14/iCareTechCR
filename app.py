@@ -10,50 +10,76 @@ def init_db():
     c = conn.cursor()
     # Tabla de productos
     c.execute('''CREATE TABLE IF NOT EXISTS productos
-                 (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                  nombre TEXT, categoria TEXT, precio TEXT, imagen TEXT)''')
-    # Tabla de textos de la web (Misión, Visión, etc.)
-    c.execute('''CREATE TABLE IF NOT EXISTS configuracion
-                 (clave TEXT PRIMARY KEY, valor TEXT)''')
-    # Valores por defecto si no existen
-    c.execute("INSERT OR IGNORE INTO configuracion VALUES ('mision', 'Nuestra misión es...')")
-    c.execute("INSERT OR IGNORE INTO configuracion VALUES ('vision', 'Nuestra visión es...')")
+                 (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT, categoria TEXT, precio TEXT, imagen TEXT)''')
+    # Tabla de configuración (Misión/Visión)
+    c.execute('''CREATE TABLE IF NOT EXISTS configuracion (clave TEXT PRIMARY KEY, valor TEXT)''')
+    # Tabla de servicios
+    c.execute('''CREATE TABLE IF NOT EXISTS servicios
+                 (id INTEGER PRIMARY KEY AUTOINCREMENT, icono TEXT, titulo TEXT, descripcion TEXT)''')
+    
+    # Valores iniciales si están vacíos
+    c.execute("INSERT OR IGNORE INTO configuracion VALUES ('mision', 'Nuestra misión es brindar soporte técnico de alta calidad...')")
+    c.execute("INSERT OR IGNORE INTO configuracion VALUES ('vision', 'Ser líderes en soluciones tecnológicas y seguridad...')")
+    
+    c.execute("SELECT COUNT(*) FROM servicios")
+    if c.fetchone()[0] == 0:
+        servs = [
+            ('📹', 'Instalación de cámaras', 'Venta e instalación de sistemas de vigilancia (CCTV).'),
+            ('💻', 'Reparación de computadoras', 'Mantenimiento y diagnóstico de hardware y software.'),
+            ('📱', 'Reparación de teléfonos', 'Cambio de pantallas, baterías y microcomponentes.'),
+            ('🌐', 'Páginas Webs', 'Creación y mantenimiento de sitios web modernos.')
+        ]
+        c.executemany("INSERT INTO servicios (icono, titulo, descripcion) VALUES (?, ?, ?)", servs)
+    
     conn.commit()
     conn.close()
 
-@app.route('/api/productos', methods=['POST', 'GET'])
+@app.route('/api/productos', methods=['GET', 'POST'])
 def manejar_productos():
     conn = sqlite3.connect('inventario.db')
     c = conn.cursor()
     if request.method == 'POST':
-        data = request.json
+        d = request.json
         c.execute("INSERT INTO productos (nombre, categoria, precio, imagen) VALUES (?, ?, ?, ?)",
-                  (data['nombre'], data['categoria'], data['precio'], data['imagen']))
+                  (d['nombre'], d['categoria'], d['precio'], d['imagen']))
         conn.commit()
-        conn.close()
         return jsonify({"mensaje": "✅ Producto guardado"}), 201
-    else:
-        c.execute("SELECT * FROM productos")
-        prods = [{"id": r[0], "nombre": r[1], "categoria": r[2], "precio": r[3], "imagen": r[4]} for r in c.fetchall()]
-        conn.close()
-        return jsonify(prods)
+    c.execute("SELECT * FROM productos")
+    res = [{"id": r[0], "nombre": r[1], "categoria": r[2], "precio": r[3], "imagen": r[4]} for r in c.fetchall()]
+    conn.close()
+    return jsonify(res)
 
-@app.route('/api/config', methods=['POST', 'GET'])
+@app.route('/api/config', methods=['GET', 'POST'])
 def manejar_config():
     conn = sqlite3.connect('inventario.db')
     c = conn.cursor()
     if request.method == 'POST':
-        data = request.json
-        for clave, valor in data.items():
-            c.execute("UPDATE configuracion SET valor = ? WHERE clave = ?", (valor, clave))
+        d = request.json
+        for k, v in d.items():
+            c.execute("UPDATE configuracion SET valor = ? WHERE clave = ?", (v, k))
         conn.commit()
-        conn.close()
-        return jsonify({"mensaje": "✅ Textos actualizados correctamente"})
-    else:
-        c.execute("SELECT * FROM configuracion")
-        config = {row[0]: row[1] for row in c.fetchall()}
-        conn.close()
-        return jsonify(config)
+        return jsonify({"mensaje": "✅ Textos actualizados"})
+    c.execute("SELECT * FROM configuracion")
+    res = {r[0]: r[1] for r in c.fetchall()}
+    conn.close()
+    return jsonify(res)
+
+@app.route('/api/servicios', methods=['GET', 'POST'])
+def manejar_servicios():
+    conn = sqlite3.connect('inventario.db')
+    c = conn.cursor()
+    if request.method == 'POST':
+        data = request.json
+        c.execute("DELETE FROM servicios")
+        for s in data:
+            c.execute("INSERT INTO servicios (icono, titulo, descripcion) VALUES (?, ?, ?)", 
+                      (s['icono'], s['titulo'], s['descripcion']))
+        conn.commit()
+        return jsonify({"mensaje": "✅ Servicios actualizados"})
+    c.execute("SELECT * FROM servicios")
+    res = [{"id": r[0], "icono": r[1], "titulo": r[2], "descripcion": r[3]} for r in c.fetchall()]
+    conn.close()
+    return jsonify(res)
 
 if __name__ == '__main__':
     init_db()
