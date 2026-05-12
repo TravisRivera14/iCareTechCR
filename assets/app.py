@@ -3,7 +3,7 @@ from flask_cors import CORS
 import sqlite3
 
 app = Flask(__name__)
-CORS(app) # Permite que el HTML hable con este servidor
+CORS(app) 
 
 def init_db():
     conn = sqlite3.connect('inventario.db')

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Admin - iCare Tech CR</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #F8F9FA; display: grid; place-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 400px; }
+        input, select, button { width: 100%; padding: 12px; margin-bottom: 16px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 15px;}
+        button { background: #1b4332; color: white; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #2d6a4f; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2 style="margin-top:0;">Agregar Producto</h2>
+        <form id="formAdmin">
+            <input type="text" id="nombre" placeholder="Nombre (Ej. iPhone 15 Pro)" required>
+            <select id="categoria">
+                <option value="iPhone">iPhone</option>
+                <option value="Mac">Mac & iPad</option>
+                <option value="Accesorios">Accesorios</option>
+            </select>
+            <input type="text" id="precio" placeholder="Descripción/Precio (Ej. 256GB - Titanio)" required>
+            <input type="text" id="imagen" placeholder="URL Imagen (Ej. assets/img/iphone.png)" required>
+            <button type="submit">Guardar en Catálogo</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('formAdmin').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const producto = {
+                nombre: document.getElementById('nombre').value,
+                categoria: document.getElementById('categoria').value,
+                precio: document.getElementById('precio').value,
+                imagen: document.getElementById('imagen').value
+            };
+
+            fetch('http://127.0.0.1:5000/api/productos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(producto)
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.mensaje);
+                document.getElementById('formAdmin').reset();
+            })
+            .catch(err => alert("Error de conexión. ¿Está encendido el servidor?"));
+        });
+    </script>
+</body>
+</html>
