@@ -4,52 +4,82 @@
     <meta charset="UTF-8">
     <title>Panel Admin - iCare Tech CR</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #F8F9FA; display: grid; place-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 400px; }
-        input, select, button { width: 100%; padding: 12px; margin-bottom: 16px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 15px;}
-        button { background: #1b4332; color: white; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        body { font-family: sans-serif; background: #f0f2f5; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 500px; margin-bottom: 20px; }
+        h2 { color: #1b4332; margin-top: 0; }
+        input, select, textarea, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; }
+        textarea { height: 80px; resize: none; }
+        button { background: #1b4332; color: white; font-weight: bold; border: none; cursor: pointer; }
         button:hover { background: #2d6a4f; }
+        .nav-admin { margin-bottom: 20px; }
     </style>
 </head>
 <body>
+
     <div class="card">
-        <h2 style="margin-top:0;">Agregar Producto</h2>
-        <form id="formAdmin">
-            <input type="text" id="nombre" placeholder="Nombre (Ej. iPhone 15 Pro)" required>
+        <h2>🛠 Editar Textos de la Web</h2>
+        <form id="formConfig">
+            <label>Misión:</label>
+            <textarea id="mision_txt" placeholder="Escribe aquí la misión..."></textarea>
+            <label>Visión:</label>
+            <textarea id="vision_txt" placeholder="Escribe aquí la visión..."></textarea>
+            <button type="submit">Actualizar Misión y Visión</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>📦 Agregar Nuevo Producto</h2>
+        <form id="formProd">
+            <input type="text" id="nombre" placeholder="Nombre del producto" required>
             <select id="categoria">
                 <option value="iPhone">iPhone</option>
                 <option value="Mac">Mac & iPad</option>
                 <option value="Accesorios">Accesorios</option>
                 <option value="Camaras">Cámaras de Vigilancia</option>
             </select>
-            <input type="text" id="precio" placeholder="Descripción/Precio (Ej. 256GB - Titanio)" required>
-            <input type="text" id="imagen" placeholder="URL Imagen (Ej. assets/img/iphone.png)" required>
-            <button type="submit">Guardar en Catálogo</button>
+            <input type="text" id="precio" placeholder="Precio o descripción" required>
+            <input type="text" id="imagen" placeholder="Ruta de imagen (assets/img/...)" required>
+            <button type="submit">Guardar Producto</button>
         </form>
     </div>
 
     <script>
-        document.getElementById('formAdmin').addEventListener('submit', function(e) {
+        // Cargar textos actuales al abrir
+        fetch('http://127.0.0.1:5001/api/config')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('mision_txt').value = data.mision;
+                document.getElementById('vision_txt').value = data.vision;
+            });
+
+        // Guardar Textos
+        document.getElementById('formConfig').addEventListener('submit', (e) => {
             e.preventDefault();
-            
-            const producto = {
+            const data = {
+                mision: document.getElementById('mision_txt').value,
+                vision: document.getElementById('vision_txt').value
+            };
+            fetch('http://127.0.0.1:5001/api/config', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            }).then(res => res.json()).then(d => alert(d.mensaje));
+        });
+
+        // Guardar Producto
+        document.getElementById('formProd').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const prod = {
                 nombre: document.getElementById('nombre').value,
                 categoria: document.getElementById('categoria').value,
                 precio: document.getElementById('precio').value,
                 imagen: document.getElementById('imagen').value
             };
-
             fetch('http://127.0.0.1:5001/api/productos', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(producto)
-            })
-            .then(res => res.json())
-            .then(data => {
-                alert(data.mensaje);
-                document.getElementById('formAdmin').reset();
-            })
-            .catch(err => alert("Error de conexión. ¿Está encendido el servidor?"));
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(prod)
+            }).then(res => res.json()).then(d => { alert(d.mensaje); document.getElementById('formProd').reset(); });
         });
     </script>
 </body>

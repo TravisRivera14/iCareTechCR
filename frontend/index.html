@@ -57,15 +57,20 @@
         .hero-btns { display: flex; gap: 16px; justify-content: center; }
 
         /* =========================================
-           SERVICIOS
+           SECCIÓN MISIÓN Y VISIÓN
            ========================================= */
-        .services { padding: 80px 0; }
-        .srv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; }
-        .srv-card { background: var(--bg-card); border: 1px solid var(--border); padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); transition: 0.3s; text-align: center; }
-        .srv-card:hover { transform: translateY(-5px); border-color: var(--brand); }
-        .srv-icon { font-size: 40px; margin-bottom: 20px; }
-        .srv-card h3 { font-size: 18px; margin-bottom: 12px; }
-        .srv-card p { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+        .about-brand { padding: 60px 0; background: var(--bg-body); }
+        .about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .about-card { 
+            background: white; 
+            padding: 40px; 
+            border-radius: var(--radius); 
+            border-left: 5px solid var(--brand); 
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+        }
+        .about-card h3 { color: var(--brand); font-size: 24px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .about-card p { color: var(--text-muted); font-size: 16px; line-height: 1.8; }
 
         /* =========================================
            CATÁLOGO DINÁMICO (ACORDEÓN)
@@ -95,7 +100,6 @@
         /* Botón WhatsApp Flotante */
         .float-wa { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; font-size: 32px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); z-index: 999; transition: 0.3s; }
         .float-wa:hover { transform: scale(1.1); }
-
     </style>
 </head>
 <body>
@@ -104,67 +108,47 @@
         <div class="container navbar">
             <div class="logo">iCare Tech CR</div>
             <nav class="nav-links">
-                <a href="#servicios">Servicios</a>
-                <a href="#catalogo">Catálogo de Productos</a>
+                <a href="#catalogo">Catálogo</a>
+                <a href="#mision-vision">Sobre Nosotros</a>
             </nav>
             <button class="btn btn-primary" onclick="openWhatsApp('Hola, quisiera contactarlos.')">Contáctanos</button>
         </div>
     </header>
 
     <section class="hero container">
-        <h1>Servicio técnico especializado <br><span>y soluciones integrales</span></h1>
-        <p>Especialistas en dispositivos móviles, reparación de computadoras, instalación de sistemas de seguridad y desarrollo de plataformas digitales.</p>
+        <h1>Soporte técnico <br><span>y seguridad electrónica</span></h1>
+        <p>Especialistas en Apple, reparación de equipos y sistemas de vigilancia. Tu tecnología en las mejores manos.</p>
         <div class="hero-btns">
-            <a href="#servicios" class="btn btn-primary">Ver Servicios</a>
-            <a href="#catalogo" class="btn btn-outline">Ver Catálogo</a>
+            <a href="#catalogo" class="btn btn-primary">Ver Catálogo</a>
+            <a href="#" class="btn btn-outline" onclick="openWhatsApp('Hola, ocupo una revisión técnica.')">Agendar Cita</a>
         </div>
     </section>
 
-    <section id="servicios" class="services container">
-        <h2 class="sec-title">Catálogo de Servicios</h2>
-        <p class="sec-sub">Seleccioná el área en la que necesitás ayuda y cotizá directamente.</p>
-
-        <div class="srv-grid">
-            <div class="srv-card">
-                <div class="srv-icon">📹</div>
-                <h3>Instalación de cámaras</h3>
-                <p>Venta e instalación de sistemas de vigilancia (CCTV) para proteger tu hogar o negocio.</p>
-                <button class="btn btn-outline" style="width: 100%;" onclick="openWhatsApp('Hola, necesito información sobre cámaras de vigilancia')">Cotizar</button>
+    <section id="mision-vision" class="about-brand">
+        <div class="container about-grid">
+            <div class="about-card" id="card-mision">
+                <h3>🎯 Nuestra Misión</h3>
+                <p>Cargando misión...</p>
             </div>
-            <div class="srv-card">
-                <div class="srv-icon">💻</div>
-                <h3>Reparación de computadoras</h3>
-                <p>Mantenimiento, diagnóstico y actualización de hardware y software para PCs y Laptops.</p>
-                <button class="btn btn-outline" style="width: 100%;" onclick="openWhatsApp('Hola, necesito reparación para mi computadora')">Cotizar</button>
-            </div>
-            <div class="srv-card">
-                <div class="srv-icon">📱</div>
-                <h3>Reparación de teléfonos</h3>
-                <p>Cambio de pantallas, baterías, puertos de carga y microcomponentes de placa.</p>
-                <button class="btn btn-outline" style="width: 100%;" onclick="openWhatsApp('Hola, necesito reparación para mi teléfono')">Cotizar</button>
-            </div>
-            <div class="srv-card">
-                <div class="srv-icon">🌐</div>
-                <h3>Páginas Webs</h3>
-                <p>Creación y mantenimiento de sitios web corporativos y tiendas online modernas.</p>
-                <button class="btn btn-outline" style="width: 100%;" onclick="openWhatsApp('Hola, me interesa la creación de una página web')">Cotizar</button>
+            <div class="about-card" id="card-vision">
+                <h3>🚀 Nuestra Visión</h3>
+                <p>Cargando visión...</p>
             </div>
         </div>
     </section>
 
     <section id="catalogo" class="catalog">
         <div class="container">
-            <h2 class="sec-title">Nuestros Productos</h2>
-            <p class="sec-sub">Equipos, accesorios y cámaras disponibles. Actualizado en tiempo real.</p>
+            <h2 class="sec-title">Catálogo de Productos</h2>
+            <p class="sec-sub">Seleccioná una categoría para ver la mercadería disponible.</p>
             
             <div class="accordion-wrapper">
-                
                 <div class="acc-item">
                     <button class="acc-header" onclick="toggleAccordion(this)">
                         <div class="acc-icon"><div class="icon-box">📱</div><span>iPhone</span></div>
                         <span class="chevron">▼</span>
                     </button>
-                    <div class="acc-content"><div class="product-grid" id="grid-iPhone">Cargando productos...</div></div>
+                    <div class="acc-content"><div class="product-grid" id="grid-iPhone"></div></div>
                 </div>
 
                 <div class="acc-item">
@@ -172,7 +156,7 @@
                         <div class="acc-icon"><div class="icon-box">💻</div><span>Mac & iPad</span></div>
                         <span class="chevron">▼</span>
                     </button>
-                    <div class="acc-content"><div class="product-grid" id="grid-Mac">Cargando productos...</div></div>
+                    <div class="acc-content"><div class="product-grid" id="grid-Mac"></div></div>
                 </div>
 
                 <div class="acc-item">
@@ -180,7 +164,7 @@
                         <div class="acc-icon"><div class="icon-box">🎧</div><span>Accesorios</span></div>
                         <span class="chevron">▼</span>
                     </button>
-                    <div class="acc-content"><div class="product-grid" id="grid-Accesorios">Cargando productos...</div></div>
+                    <div class="acc-content"><div class="product-grid" id="grid-Accesorios"></div></div>
                 </div>
 
                 <div class="acc-item">
@@ -188,9 +172,8 @@
                         <div class="acc-icon"><div class="icon-box">📹</div><span>Cámaras de Vigilancia</span></div>
                         <span class="chevron">▼</span>
                     </button>
-                    <div class="acc-content"><div class="product-grid" id="grid-Camaras">Cargando productos...</div></div>
+                    <div class="acc-content"><div class="product-grid" id="grid-Camaras"></div></div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -198,7 +181,6 @@
     <a href="#" class="float-wa" onclick="openWhatsApp('Hola, necesito ayuda desde la web.'); return false;">💬</a>
 
     <script>
-        // Funcionalidad base: Acordeón
         function toggleAccordion(button) {
             const item = button.parentElement;
             const isActive = item.classList.contains('active');
@@ -206,18 +188,23 @@
             if (!isActive) item.classList.add('active');
         }
 
-        // Funcionalidad base: WhatsApp
         function openWhatsApp(mensaje) {
             const telefono = "50685836365"; 
             window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`, '_blank');
         }
 
-        // ==========================================
-        // CONEXIÓN CON LA BASE DE DATOS (API REST) AL PUERTO 5001
-        // ==========================================
         document.addEventListener("DOMContentLoaded", () => {
-            
-            // 1. Apuntamos a los contenedores donde irán las tarjetas
+            const API_BASE = 'http://127.0.0.1:5001/api';
+
+            // 1. CARGAR TEXTOS (MISIÓN Y VISIÓN)
+            fetch(`${API_BASE}/config`)
+                .then(res => res.json())
+                .then(data => {
+                    document.querySelector('#card-mision p').innerText = data.mision;
+                    document.querySelector('#card-vision p').innerText = data.vision;
+                });
+
+            // 2. CARGAR PRODUCTOS
             const grids = {
                 'iPhone': document.getElementById('grid-iPhone'),
                 'Mac': document.getElementById('grid-Mac'),
@@ -225,47 +212,33 @@
                 'Camaras': document.getElementById('grid-Camaras')
             };
 
-            // 2. Pedimos los datos al servidor Python
-            fetch('http://127.0.0.1:5001/api/productos')
-                .then(respuesta => respuesta.json())
+            fetch(`${API_BASE}/productos`)
+                .then(res => res.json())
                 .then(productos => {
+                    Object.values(grids).forEach(g => g.innerHTML = '');
                     
-                    // Limpiamos el texto de "Cargando..."
-                    for (let key in grids) { grids[key].innerHTML = ''; }
-
-                    // Si la base de datos está vacía
                     if(productos.length === 0) {
-                        for (let key in grids) { grids[key].innerHTML = '<div class="product-placeholder">Pronto agregaremos productos aquí.</div>'; }
+                        Object.values(grids).forEach(g => g.innerHTML = '<div class="product-placeholder">Pronto más mercadería...</div>');
                         return;
                     }
 
-                    // 3. Dibujamos cada producto en su categoría
                     productos.forEach(prod => {
-                        const tarjetaHTML = `
+                        const html = `
                             <div class="prod-card">
-                                <img src="${prod.imagen}" alt="${prod.nombre}" class="prod-img" onerror="this.src='https://via.placeholder.com/150?text=Sin+Imagen'">
+                                <img src="${prod.imagen}" alt="${prod.nombre}" class="prod-img" onerror="this.src='https://via.placeholder.com/150?text=iCare+Tech'">
                                 <div class="prod-title">${prod.nombre}</div>
                                 <div class="prod-price">${prod.precio}</div>
-                                <button class="btn btn-outline" style="width: 100%; padding: 8px; font-size: 13px;" onclick="openWhatsApp('Hola, quiero cotizar este producto: ${prod.nombre} (${prod.precio})')">Me interesa</button>
-                            </div>
-                        `;
-                        
-                        // Si la categoría existe, lo metemos en su contenedor
-                        if (grids[prod.categoria]) {
-                            grids[prod.categoria].innerHTML += tarjetaHTML;
-                        }
+                                <button class="btn btn-outline" style="width: 100%; font-size: 12px;" onclick="openWhatsApp('Me interesa: ${prod.nombre}')">Consultar</button>
+                            </div>`;
+                        if (grids[prod.categoria]) grids[prod.categoria].innerHTML += html;
                     });
 
-                    // Si alguna categoría quedó vacía, le ponemos un mensaje de relleno
-                    for (let key in grids) {
-                        if (grids[key].innerHTML === '') {
-                            grids[key].innerHTML = '<div class="product-placeholder">Pronto agregaremos productos aquí.</div>';
-                        }
-                    }
+                    Object.keys(grids).forEach(key => {
+                        if (grids[key].innerHTML === '') grids[key].innerHTML = '<div class="product-placeholder">No hay productos en esta categoría.</div>';
+                    });
                 })
-                .catch(error => {
-                    console.log("Error de conexión:", error);
-                    for (let key in grids) { grids[key].innerHTML = '<div class="product-placeholder">Error: No se pudo conectar a la base de datos. Verifica que el servidor Python (app.py) esté encendido.</div>'; }
+                .catch(() => {
+                    Object.values(grids).forEach(g => g.innerHTML = '<div class="product-placeholder">Enciende el servidor app.py para ver el catálogo.</div>');
                 });
         });
     </script>
