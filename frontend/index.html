@@ -3,75 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iCare Tech CR | Apple Professional Service</title>
+    <title>iCare Tech CR | Apple Service</title>
     <style>
         :root { --a-black: #1d1d1f; --a-grey: #86868b; --a-bg: #f5f5f7; --brand: #1b4332; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
         body { background: #fff; color: var(--a-black); -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
         .container { max-width: 1020px; margin: 0 auto; padding: 0 20px; }
-        
         header { background: rgba(255,255,255,0.7); backdrop-filter: saturate(180%) blur(20px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.08); }
         .nav { display: flex; justify-content: space-between; align-items: center; height: 50px; }
-        .logo { font-size: 19px; font-weight: 600; letter-spacing: -0.02em; }
-        
+        .logo { font-size: 19px; font-weight: 600; }
         .hero { padding: 100px 0 60px; text-align: center; }
-        .hero h1 { font-size: 64px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.05; }
-        .hero p { font-size: 24px; color: var(--a-grey); margin-top: 15px; }
-
+        .hero h1 { font-size: 64px; font-weight: 700; letter-spacing: -0.015em; }
         .section-title { font-size: 40px; font-weight: 600; text-align: center; margin: 80px 0 40px; }
-        
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-bottom: 60px; }
-        .card { background: var(--a-bg); padding: 50px 30px; border-radius: 30px; text-align: center; transition: 0.5s; }
-        .card:hover { transform: scale(1.01); background: #fff; box-shadow: 0 20px 40px rgba(0,0,0,0.04); }
-        .icon { font-size: 50px; margin-bottom: 20px; display: block; }
-        .card h3 { font-size: 22px; font-weight: 600; margin-bottom: 12px; }
-        .card p { font-size: 16px; color: var(--a-grey); line-height: 1.5; }
-
-        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 80px 0; }
-        .about-box { background: var(--a-bg); padding: 50px; border-radius: 30px; }
-        .about-box h3 { font-size: 28px; margin-bottom: 15px; color: var(--brand); }
+        .card { background: var(--a-bg); padding: 50px 30px; border-radius: 30px; text-align: center; transition: 0.4s; }
+        
+        /* UNIFICADO: QUIÉNES SOMOS HORIZONTAL */
+        .about-wide { background: var(--a-bg); padding: 60px; border-radius: 40px; margin: 50px 0; display: flex; gap: 40px; align-items: flex-start; }
+        .about-item { flex: 1; }
+        .about-item h3 { font-size: 28px; margin-bottom: 15px; color: var(--brand); }
+        .about-item p { font-size: 17px; color: var(--a-grey); line-height: 1.6; }
 
         .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 24px; padding-bottom: 80px; }
         .prod-card { text-align: center; padding: 25px; border-radius: 20px; transition: 0.3s; }
-        .prod-card:hover { background: var(--a-bg); }
-        .prod-img { width: 100%; height: 180px; object-fit: contain; margin-bottom: 15px; }
-
-        .btn-blue { background: #0071e3; color: #fff; padding: 8px 18px; border-radius: 20px; font-size: 13px; text-decoration: none; display: inline-block; }
-        .wa { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; font-size: 30px; z-index: 2000; box-shadow: 0 8px 20px rgba(0,0,0,0.1); text-decoration: none; }
+        .prod-img { width: 100%; height: 180px; object-fit: contain; margin-bottom: 15px; border-radius: 10px; }
+        .btn-blue { background: #0071e3; color: #fff; padding: 8px 18px; border-radius: 20px; font-size: 13px; text-decoration: none; cursor: pointer; }
+        .wa { position: fixed; bottom: 30px; right: 30px; background: #25D366; color: white; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; font-size: 30px; z-index: 2000; }
+        @media (max-width: 768px) { .about-wide { flex-direction: column; } }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="container nav">
-        <div class="logo">iCare Tech CR</div>
-        <a href="#" class="btn-blue" onclick="openWA('Hola, necesito soporte.')">Contacto</a>
-    </div>
-</header>
+<header><div class="container nav"><div class="logo">iCare Tech CR</div><a href="#" class="btn-blue" onclick="openWA('Hola')">Contacto</a></div></header>
 
-<section class="hero container">
-    <h1>Servicio <span>Premium.</span></h1>
-    <p>La mejor atención para tu tecnología Apple y Seguridad.</p>
-</section>
+<section class="hero container"><h1>Calidad <span>Apple.</span></h1><p>Soporte profesional y seguridad electrónica.</p></section>
 
 <div class="container">
-    <h2 class="section-title">Servicios</h2>
-    <div class="grid" id="srv-c"></div>
+    <h2 class="section-title">Nuestros Servicios</h2><div class="grid" id="srv-c"></div>
 
-    <h2 class="section-title">Por qué nosotros</h2>
-    <div class="grid" id="ben-c"></div>
-</div>
+    <h2 class="section-title">Por qué nosotros</h2><div class="grid" id="ben-c"></div>
 
-<div style="background: #fff;">
-    <div class="container about-grid">
-        <div class="about-box"><h3>Misión</h3><p id="m-t"></p></div>
-        <div class="about-box"><h3>Visión</h3><p id="v-t"></p></div>
+    <div class="about-wide">
+        <div class="about-item"><h3>Nuestra Misión</h3><p id="m-t"></p></div>
+        <div class="about-item"><h3>Nuestra Visión</h3><p id="v-t"></p></div>
     </div>
-</div>
 
-<div class="container">
-    <h2 class="section-title">Catálogo</h2>
-    <div class="prod-grid" id="prod-c"></div>
+    <h2 class="section-title">Catálogo</h2><div class="prod-grid" id="prod-c"></div>
 </div>
 
 <a href="#" class="wa" onclick="openWA('Hola iCare Tech')">💬</a>
@@ -81,27 +58,12 @@
     function openWA(m) { window.open(`https://wa.me/50685836365?text=${encodeURIComponent(m)}`); }
 
     document.addEventListener("DOMContentLoaded", () => {
-        // Cargar Servicios
-        fetch(`${API}/servicios`).then(r=>r.json()).then(data => {
-            const c = document.getElementById('srv-c');
-            data.forEach(s => { c.innerHTML += `<div class="card"><span class="icon">${s.icono}</span><h3>${s.titulo}</h3><p>${s.descripcion}</p></div>`; });
-        });
-        // Cargar Beneficios
-        fetch(`${API}/beneficios`).then(r=>r.json()).then(data => {
-            const c = document.getElementById('ben-c');
-            data.forEach(b => { c.innerHTML += `<div class="card"><span class="icon">${b.icono}</span><h3>${b.titulo}</h3><p>${b.descripcion}</p></div>`; });
-        });
-        // Cargar Config
-        fetch(`${API}/config`).then(r=>r.json()).then(d => {
-            document.getElementById('m-t').innerText = d.mision; document.getElementById('v-t').innerText = d.vision;
-        });
-        // Cargar Productos
-        fetch(`${API}/productos`).then(r=>r.json()).then(data => {
-            const c = document.getElementById('prod-c');
-            data.forEach(p => {
-                c.innerHTML += `<div class="prod-card"><img src="${p.imagen}" class="prod-img" onerror="this.src='https://via.placeholder.com/200'"> <div style="font-weight:600">${p.nombre}</div> <div style="color:#86868b; font-size:14px; margin:5px 0 15px;">${p.precio}</div> <a href="#" class="btn-blue" onclick="openWA('Interés en: ${p.nombre}')">Consultar</a> </div>`;
-            });
-        });
+        fetch(`${API}/servicios`).then(r=>r.json()).then(data => data.forEach(s => document.getElementById('srv-c').innerHTML += `<div class="card"><span>${s.icono}</span><h3>${s.titulo}</h3><p>${s.descripcion}</p></div>`));
+        fetch(`${API}/beneficios`).then(r=>r.json()).then(data => data.forEach(b => document.getElementById('ben-c').innerHTML += `<div class="card"><span>${b.icono}</span><h3>${b.titulo}</h3><p>${b.descripcion}</p></div>`));
+        fetch(`${API}/config`).then(r=>r.json()).then(d => { document.getElementById('m-t').innerText = d.mision; document.getElementById('v-t').innerText = d.vision; });
+        fetch(`${API}/productos`).then(r=>r.json()).then(data => data.forEach(p => {
+            document.getElementById('prod-c').innerHTML += `<div class="prod-card"><img src="${p.imagen}" class="prod-img" onerror="this.src='https://via.placeholder.com/200'"><div style="font-weight:600">${p.nombre}</div><div style="color:#86868b; font-size:14px; margin:5px 0 15px;">${p.precio}</div><a href="#" class="btn-blue" onclick="openWA('Interés en: ${p.nombre}')">Consultar</a></div>`;
+        }));
     });
 </script>
 </body>

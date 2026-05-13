@@ -12,29 +12,11 @@ def init_db():
     c.execute('''CREATE TABLE IF NOT EXISTS configuracion (clave TEXT PRIMARY KEY, valor TEXT)''')
     c.execute('''CREATE TABLE IF NOT EXISTS servicios (id INTEGER PRIMARY KEY AUTOINCREMENT, icono TEXT, titulo TEXT, descripcion TEXT)''')
     c.execute('''CREATE TABLE IF NOT EXISTS beneficios (id INTEGER PRIMARY KEY AUTOINCREMENT, icono TEXT, titulo TEXT, descripcion TEXT)''')
-    # Nueva tabla para pestañas extra
     c.execute('''CREATE TABLE IF NOT EXISTS secciones_extra (id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT, contenido TEXT)''')
-    
-    c.execute("INSERT OR IGNORE INTO configuracion VALUES ('mision', 'Nuestra misión...')")
-    c.execute("INSERT OR IGNORE INTO configuracion VALUES ('vision', 'Nuestra visión...')")
+    c.execute("INSERT OR IGNORE INTO configuracion VALUES ('mision', 'Nuestra misión es...')")
+    c.execute("INSERT OR IGNORE INTO configuracion VALUES ('vision', 'Nuestra visión es...')")
     conn.commit()
     conn.close()
-
-@app.route('/api/secciones', methods=['GET', 'POST'])
-def manejar_secciones():
-    conn = sqlite3.connect('inventario.db')
-    c = conn.cursor()
-    if request.method == 'POST':
-        data = request.json
-        c.execute("DELETE FROM secciones_extra")
-        for s in data:
-            c.execute("INSERT INTO secciones_extra (titulo, contenido) VALUES (?, ?)", (s['titulo'], s['contenido']))
-        conn.commit()
-        return jsonify({"mensaje": "✅ Secciones actualizadas"})
-    c.execute("SELECT * FROM secciones_extra")
-    res = [{"titulo": r[1], "contenido": r[2]} for r in c.fetchall()]
-    conn.close()
-    return jsonify(res)
 
 @app.route('/api/productos', methods=['GET', 'POST'])
 def manejar_productos():
@@ -44,7 +26,7 @@ def manejar_productos():
         d = request.json
         c.execute("INSERT INTO productos (nombre, categoria, precio, imagen) VALUES (?, ?, ?, ?)", (d['nombre'], d['categoria'], d['precio'], d['imagen']))
         conn.commit()
-        return jsonify({"mensaje": "✅ Guardado"})
+        return jsonify({"mensaje": "✅ Producto Guardado"})
     c.execute("SELECT * FROM productos")
     res = [{"nombre": r[1], "categoria": r[2], "precio": r[3], "imagen": r[4]} for r in c.fetchall()]
     conn.close()
@@ -58,7 +40,7 @@ def manejar_config():
         d = request.json
         for k, v in d.items(): c.execute("UPDATE configuracion SET valor = ? WHERE clave = ?", (v, k))
         conn.commit()
-        return jsonify({"mensaje": "✅ Configuración guardada"})
+        return jsonify({"mensaje": "✅ Textos actualizados"})
     c.execute("SELECT * FROM configuracion")
     res = {r[0]: r[1] for r in c.fetchall()}
     conn.close()
@@ -91,6 +73,21 @@ def manejar_beneficios():
         return jsonify({"mensaje": "✅ Beneficios guardados"})
     c.execute("SELECT * FROM beneficios")
     res = [{"icono": r[1], "titulo": r[2], "descripcion": r[3]} for r in c.fetchall()]
+    conn.close()
+    return jsonify(res)
+
+@app.route('/api/secciones', methods=['GET', 'POST'])
+def manejar_secciones():
+    conn = sqlite3.connect('inventario.db')
+    c = conn.cursor()
+    if request.method == 'POST':
+        data = request.json
+        c.execute("DELETE FROM secciones_extra")
+        for s in data: c.execute("INSERT INTO secciones_extra (titulo, contenido) VALUES (?, ?)", (s['titulo'], s['contenido']))
+        conn.commit()
+        return jsonify({"mensaje": "✅ Secciones actualizadas"})
+    c.execute("SELECT * FROM secciones_extra")
+    res = [{"titulo": r[1], "contenido": r[2]} for r in c.fetchall()]
     conn.close()
     return jsonify(res)
 

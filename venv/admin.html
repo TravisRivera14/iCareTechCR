@@ -2,25 +2,41 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>iCare Admin | Editor Dinámico</title>
+    <title>iCare Admin | Editor Total</title>
     <style>
-        body { font-family: -apple-system, sans-serif; background: #f5f5f7; padding: 40px; color: #1d1d1f; }
-        .container { max-width: 850px; margin: 0 auto; }
-        .card { background: white; padding: 30px; border-radius: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 30px; border: 1px solid #d2d2d7; }
-        h2 { font-size: 20px; margin-bottom: 20px; color: #1b4332; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        input, select, textarea, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #d2d2d7; font-size: 15px; box-sizing: border-box; }
-        button { background: #1b4332; color: white; border: none; cursor: pointer; font-weight: 600; transition: 0.3s; }
-        .btn-add { background: #0071e3; margin-top: 20px; }
-        .item-box { background: #fbfbfd; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #e5e5e5; position: relative; }
-        .btn-del { background: #ff3b30; width: 30px; height: 30px; padding: 0; position: absolute; top: -10px; right: -10px; border-radius: 50%; }
+        body { font-family: -apple-system, sans-serif; background: #f5f5f7; padding: 40px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 25px; border: 1px solid #d2d2d7; }
+        input, select, textarea, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #d2d2d7; font-size: 14px; box-sizing: border-box; }
+        button { background: #1b4332; color: white; border: none; cursor: pointer; font-weight: 600; }
+        .item-box { background: #fbfbfd; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #eee; position: relative; }
+        #preview { width: 100px; height: 100px; object-fit: contain; display: none; margin-top: 10px; border: 1px solid #eee; padding: 5px; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Editor Maestro iCare Tech CR</h1>
+    <h1>Panel Administrativo</h1>
 
     <div class="card">
-        <h2>🛠 Editar Mis Servicios</h2>
+        <h2>📦 Nuevo Producto</h2>
+        <input type="text" id="pName" placeholder="Nombre del Producto">
+        <select id="pCat">
+            <option value="iPhone">iPhone</option>
+            <option value="Mac">Mac & iPad</option>
+            <option value="Accesorios">Accesorios</option>
+            <option value="Camaras">Cámaras</option>
+        </select>
+        <input type="text" id="pPrice" placeholder="Precio o Detalle">
+        
+        <label>Adjuntar Imagen (.png, .jpg):</label>
+        <input type="file" id="pImgFile" accept="image/png, image/jpeg">
+        <img id="preview">
+
+        <button onclick="saveProd()">Publicar Producto</button>
+    </div>
+
+    <div class="card">
+        <h2>🛠 Editar Servicios</h2>
         <div id="srv-list"></div>
         <button onclick="saveSrv()">Guardar Servicios</button>
     </div>
@@ -32,62 +48,64 @@
     </div>
 
     <div class="card">
-        <h2>✨ Secciones Extra (Pestañas nuevas)</h2>
-        <div id="extra-list"></div>
-        <button class="btn-add" onclick="addExtraField()">+ Añadir Nueva Pestaña</button>
-        <button onclick="saveExtra()" style="margin-top:10px;">Guardar Todas las Pestañas</button>
-    </div>
-
-    <div class="card">
         <h2>🎯 Misión y Visión</h2>
-        <textarea id="mision"></textarea>
-        <textarea id="vision"></textarea>
-        <button onclick="saveConfig()">Actualizar Misión/Visión</button>
-    </div>
-
-    <div class="card">
-        <h2>📦 Añadir Producto</h2>
-        <input type="text" id="pName" placeholder="Nombre">
-        <select id="pCat"><option value="iPhone">iPhone</option><option value="Mac">Mac & iPad</option><option value="Accesorios">Accesorios</option><option value="Camaras">Cámaras</option></select>
-        <input type="text" id="pPrice" placeholder="Precio">
-        <input type="text" id="pImg" placeholder="Imagen">
-        <button onclick="saveProd()">Publicar</button>
+        <textarea id="mision" placeholder="Misión"></textarea>
+        <textarea id="vision" placeholder="Visión"></textarea>
+        <button onclick="saveConfig()">Actualizar Textos</button>
     </div>
 </div>
 
 <script>
     const API = 'http://127.0.0.1:5001/api';
+    let base64Image = "";
+
+    // Previsualización de imagen
+    document.getElementById('pImgFile').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function() {
+            base64Image = reader.result;
+            const prev = document.getElementById('preview');
+            prev.src = base64Image;
+            prev.style.display = "block";
+        }
+        reader.readAsDataURL(file);
+    });
 
     window.onload = () => {
-        fetch(`${API}/config`).then(r=>r.json()).then(d=>{ document.getElementById('mision').value = d.mision; document.getElementById('vision').value = d.vision; });
-        fetch(`${API}/servicios`).then(r=>r.json()).then(data => data.forEach(s => renderSrv(s)));
-        fetch(`${API}/beneficios`).then(r=>r.json()).then(data => data.forEach(b => renderBen(b)));
-        fetch(`${API}/secciones`).then(r=>r.json()).then(data => data.forEach(e => renderExtra(e)));
+        fetch(`${API}/config`).then(r=>r.json()).then(d=>{ 
+            document.getElementById('mision').value = d.mision; 
+            document.getElementById('vision').value = d.vision; 
+        });
+        fetch(`${API}/servicios`).then(r=>r.json()).then(data => data.forEach(s => {
+            document.getElementById('srv-list').innerHTML += `<div class="item-box"><input type="text" class="si" value="${s.icono}" style="width:20%"><input type="text" class="st" value="${s.titulo}" style="width:75%"><textarea class="sd">${s.descripcion}</textarea></div>`;
+        }));
+        fetch(`${API}/beneficios`).then(r=>r.json()).then(data => data.forEach(b => {
+            document.getElementById('ben-list').innerHTML += `<div class="item-box"><input type="text" class="bi" value="${b.icono}" style="width:20%"><input type="text" class="bt" value="${b.titulo}" style="width:75%"><textarea class="bd">${b.descripcion}</textarea></div>`;
+        }));
     };
 
-    function renderSrv(s) { document.getElementById('srv-list').innerHTML += `<div class="item-box"><input type="text" class="si" value="${s.icono}" style="width:20%"><input type="text" class="st" value="${s.titulo}" style="width:75%"><textarea class="sd">${s.descripcion}</textarea></div>`; }
-    function renderBen(b) { document.getElementById('ben-list').innerHTML += `<div class="item-box"><input type="text" class="bi" value="${b.icono}" style="width:20%"><input type="text" class="bt" value="${b.titulo}" style="width:75%"><textarea class="bd">${b.descripcion}</textarea></div>`; }
-    function renderExtra(e) { document.getElementById('extra-list').innerHTML += `<div class="item-box extra-item"><button class="btn-del" onclick="this.parentElement.remove()">X</button><input type="text" class="et" value="${e.titulo}" placeholder="Título de la sección"><textarea class="ec" placeholder="Contenido de la sección">${e.contenido}</textarea></div>`; }
-    
-    function addExtraField() { renderExtra({titulo:'', contenido:''}); }
+    function saveProd() {
+        const p = { nombre: document.getElementById('pName').value, categoria: document.getElementById('pCat').value, precio: document.getElementById('pPrice').value, imagen: base64Image };
+        fetch(`${API}/productos`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(p) }).then(r=>r.json()).then(d=>{ alert(d.mensaje); location.reload(); });
+    }
 
     function saveSrv() {
         const i = document.querySelectorAll('.si'), t = document.querySelectorAll('.st'), d = document.querySelectorAll('.sd');
         let res = []; for(let k=0; k<i.length; k++) res.push({icono:i[k].value, titulo:t[k].value, descripcion:d[k].value});
         fetch(`${API}/servicios`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(res)}).then(r=>r.json()).then(m=>alert(m.mensaje));
     }
+
     function saveBen() {
         const i = document.querySelectorAll('.bi'), t = document.querySelectorAll('.bt'), d = document.querySelectorAll('.bd');
         let res = []; for(let k=0; k<i.length; k++) res.push({icono:i[k].value, titulo:t[k].value, descripcion:d[k].value});
         fetch(`${API}/beneficios`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(res)}).then(r=>r.json()).then(m=>alert(m.mensaje));
     }
-    function saveExtra() {
-        const t = document.querySelectorAll('.et'), c = document.querySelectorAll('.ec');
-        let res = []; for(let k=0; k<t.length; k++) res.push({titulo:t[k].value, contenido:c[k].value});
-        fetch(`${API}/secciones`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(res)}).then(r=>r.json()).then(m=>alert(m.mensaje));
+
+    function saveConfig() {
+        const d = { mision: document.getElementById('mision').value, vision: document.getElementById('vision').value };
+        fetch(`${API}/config`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(d) }).then(r=>r.json()).then(d=>alert(d.mensaje));
     }
-    function saveConfig() { fetch(`${API}/config`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({mision:document.getElementById('mision').value, vision:document.getElementById('vision').value})}).then(r=>r.json()).then(m=>alert(m.mensaje)); }
-    function saveProd() { fetch(`${API}/productos`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({nombre:document.getElementById('pName').value, categoria:document.getElementById('pCat').value, precio:document.getElementById('pPrice').value, imagen:document.getElementById('pImg').value})}).then(r=>r.json()).then(m=>{alert(m.mensaje); location.reload();}); }
 </script>
 </body>
 </html>
