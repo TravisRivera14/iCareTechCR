@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import sqlite3
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app)
 # Límite de 16MB para permitir imágenes y logos pesados
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
@@ -95,6 +95,14 @@ def editar_resena(id):
 def eliminar_item(tabla, id):
     db_query(f"DELETE FROM {tabla} WHERE id = ?", (id,))
     return jsonify({"mensaje": "🗑️"})
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
+@app.route('/admin')
+def admin():
+    return app.send_static_file('admin.html')
 
 if __name__ == '__main__':
     init_db()
