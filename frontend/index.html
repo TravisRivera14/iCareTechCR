@@ -384,8 +384,10 @@
 
     <script>
         // ✅ API URL ACTUALIZADA PARA RENDER
-        const API = window.location.origin + '/api';
+         const API = window.location.origin + '/api';
         
+        let editId = null;
+        let currentTable = '';
         let allProducts = [];
         let currentCat = 'Todos';
         let publicReviewImg = ""; // Para guardar la imagen base64 del cliente
