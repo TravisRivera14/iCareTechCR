@@ -3,7 +3,7 @@ from flask_cors import CORS
 import sqlite3
 import os
 
-# Configuración para servir archivos desde la raíz
+# Configuración vital: static_folder='.' le dice que tus HTML están en la raíz
 app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
@@ -30,7 +30,7 @@ def init_db():
 
 init_db()
 
-# --- RUTAS DE NAVEGACIÓN ---
+# --- ESTAS SON LAS LÍNEAS QUE ARREGLAN EL "NOT FOUND" ---
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
@@ -38,8 +38,8 @@ def index():
 @app.route('/admin')
 def admin():
     return app.send_static_file('admin.html')
+# -------------------------------------------------------
 
-# --- API ---
 @app.route('/api/todo', methods=['GET'])
 def obtener_todo():
     servicios = db_query("SELECT * FROM servicios", fetch=True)
@@ -48,7 +48,6 @@ def obtener_todo():
     resenas = db_query("SELECT * FROM resenas", fetch=True)
     config_raw = db_query("SELECT * FROM configuracion", fetch=True)
     config = {row[0]: row[1] for row in config_raw}
-    
     return jsonify({
         "servicios": [{"id": s[0], "icono": s[1], "titulo": s[2], "descripcion": s[3], "imagen": s[4]} for s in servicios],
         "productos": [{"id": p[0], "nombre": p[1], "precio": p[2], "imagen": p[3], "categoria": p[4]} for p in productos],
@@ -84,22 +83,6 @@ def gestionar_producto(id=None):
         db_query("UPDATE productos SET nombre=?, precio=?, imagen=?, categoria=? WHERE id=?", (d['nombre'], d['precio'], d['imagen'], d.get('categoria', 'Otros'), id))
     return jsonify({"mensaje": "✅"})
 
-@app.route('/api/resenas', methods=['POST'])
-@app.route('/api/resenas/<int:id>', methods=['PUT'])
-def gestionar_resena(id=None):
-    d = request.json
-    if request.method == 'POST':
-        db_query("INSERT INTO resenas (cliente, puesto, comentario, imagen_cliente) VALUES (?, ?, ?, ?)", (d['cliente'], d.get('puesto',''), d['comentario'], d.get('imagen_cliente','')))
-    else:
-        db_query("UPDATE resenas SET cliente=?, puesto=?, comentario=?, imagen_cliente=? WHERE id=?", (d['cliente'], d.get('puesto',''), d['comentario'], d.get('imagen_cliente',''), id))
-    return jsonify({"mensaje": "✅"})
-
-@app.route('/api/socios', methods=['POST'])
-def guardar_socio():
-    d = request.json
-    db_query("INSERT INTO socios (nombre, imagen) VALUES (?, ?)", (d['nombre'], d['imagen']))
-    return jsonify({"mensaje": "✅"})
-
 @app.route('/api/eliminar/<tabla>/<int:id>', methods=['DELETE'])
 def eliminar_item(tabla, id):
     if tabla in ['servicios', 'productos', 'socios', 'resenas']:
@@ -107,4 +90,5 @@ def eliminar_item(tabla, id):
     return jsonify({"mensaje": "🗑️"})
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
