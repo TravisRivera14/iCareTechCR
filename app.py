@@ -1,10 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import sqlite3
-import os
 
-# Configuración crucial: le dice a Flask que use la carpeta raíz para archivos estáticos
-app = Flask(__name__, static_folder='.', static_url_path='')
+app = Flask(__name__)
 CORS(app)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
 
@@ -28,72 +26,64 @@ def init_db():
     conn.commit()
     conn.close()
 
-init_db()
-
-# --- RUTAS PRINCIPALES ---
-
-@app.route('/')
-def home():
-    # Esto fuerza a Flask a entregar el index.html desde la raíz
-    return app.send_static_file('index.html')
-
-@app.route('/admin')
-def admin_page():
-    # Esto fuerza a Flask a entregar el admin.html desde la raíz
-    return app.send_static_file('admin.html')
-
-# --- API (Asegúrate de que estas rutas se mantengan así) ---
-
 @app.route('/api/todo', methods=['GET'])
 def obtener_todo():
-    servicios = db_query("SELECT * FROM servicios", fetch=True)
-    productos = db_query("SELECT * FROM productos", fetch=True)
-    socios = db_query("SELECT * FROM socios", fetch=True)
-    resenas = db_query("SELECT * FROM resenas", fetch=True)
-    config_raw = db_query("SELECT * FROM configuracion", fetch=True)
-    config = {row[0]: row[1] for row in config_raw}
-    return jsonify({
-        "servicios": [{"id": s[0], "icono": s[1], "titulo": s[2], "descripcion": s[3], "imagen": s[4]} for s in servicios],
-        "productos": [{"id": p[0], "nombre": p[1], "precio": p[2], "imagen": p[3], "categoria": p[4]} for p in productos],
-        "socios": [{"id": so[0], "nombre": so[1], "imagen": so[2]} for so in socios],
-        "resenas": [{"id": r[0], "cliente": r[1], "puesto": r[2], "comentario": r[3], "imagen_cliente": r[4]} for r in resenas],
-        "config": config
-    })
+    config_raw = db_query("SELECT clave, valor FROM configuracion", fetch=True)
+    config = {r[0]: r[1] for r in config_raw}
+    servs = [{"id": r[0], "icono": r[1], "titulo": r[2], "descripcion": r[3], "imagen": r[4]} for r in db_query("SELECT id, icono, titulo, descripcion, imagen FROM servicios", fetch=True)]
+    prods = [{"id": r[0], "nombre": r[1], "precio": r[2], "imagen": r[3], "categoria": r[4]} for r in db_query("SELECT id, nombre, precio, imagen, categoria FROM productos", fetch=True)]
+    parts = [{"id": r[0], "nombre": r[1], "imagen": r[2]} for r in db_query("SELECT id, nombre, imagen FROM socios", fetch=True)]
+    reviews = [{"id": r[0], "cliente": r[1], "puesto": r[2], "comentario": r[3], "imagen_cliente": r[4], "estrellas": r[5]} for r in db_query("SELECT id, cliente, puesto, comentario, imagen_cliente, estrellas FROM resenas", fetch=True)]
+    return jsonify({"config": config, "servicios": servs, "productos": prods, "socios": parts, "resenas": reviews})
 
-@app.route('/api/config', methods=['POST'])
-def guardar_config():
+@app.route('/api/resenas', methods=['POST'])
+def guardar_resena():
     d = request.json
-    for k, v in d.items():
-        db_query("INSERT OR REPLACE INTO configuracion (clave, valor) VALUES (?, ?)", (k, v))
+    db_query("INSERT INTO resenas (cliente, puesto, comentario, imagen_cliente) VALUES (?, ?, ?, ?)", (d['cliente'], d.get('puesto', ''), d['comentario'], d.get('imagen_cliente', '')))
+    return jsonify({"mensaje": "✅"})
+
+# ✅ RUTA DE EDICIÓN PARA RESEÑAS AÑADIDA
+@app.route('/api/resenas/<int:id>', methods=['PUT'])
+def editar_resena(id):
+    d = request.json
+    db_query("UPDATE resenas SET cliente=?, puesto=?, comentario=?, imagen_cliente=? WHERE id=?", (d['cliente'], d.get('puesto', ''), d['comentario'], d.get('imagen_cliente',''), id))
+    return jsonify({"mensaje": "✅"})
+
+@app.route('/api/socios', methods=['POST'])
+def guardar_socio():
+    d = request.json
+    db_query("INSERT INTO socios (nombre, imagen) VALUES (?, ?)", (d['nombre'], d.get('imagen', '')))
     return jsonify({"mensaje": "✅"})
 
 @app.route('/api/servicios', methods=['POST'])
-@app.route('/api/servicios/<int:id>', methods=['PUT'])
-def gestionar_servicio(id=None):
+def guardar_servicio():
     d = request.json
-    if request.method == 'POST':
-        db_query("INSERT INTO servicios (icono, titulo, descripcion, imagen) VALUES (?, ?, ?, ?)", (d['icono'], d['titulo'], d['descripcion'], d.get('imagen','')))
-    else:
-        db_query("UPDATE servicios SET icono=?, titulo=?, descripcion=?, imagen=? WHERE id=?", (d['icono'], d['titulo'], d['descripcion'], d.get('imagen',''), id))
+    db_query("INSERT INTO servicios (icono, titulo, descripcion, imagen) VALUES (?, ?, ?, ?)", (d['icono'], d['titulo'], d['descripcion'], d.get('imagen', '')))
     return jsonify({"mensaje": "✅"})
 
 @app.route('/api/productos', methods=['POST'])
-@app.route('/api/productos/<int:id>', methods=['PUT'])
-def gestionar_producto(id=None):
+def guardar_producto():
     d = request.json
-    if request.method == 'POST':
-        db_query("INSERT INTO productos (nombre, precio, imagen, categoria) VALUES (?, ?, ?, ?)", (d['nombre'], d['precio'], d['imagen'], d.get('categoria', 'Otros')))
-    else:
-        db_query("UPDATE productos SET nombre=?, precio=?, imagen=?, categoria=? WHERE id=?", (d['nombre'], d['precio'], d['imagen'], d.get('categoria', 'Otros'), id))
+    db_query("INSERT INTO productos (nombre, precio, imagen, categoria) VALUES (?, ?, ?, ?)", (d['nombre'], d['precio'], d['imagen'], d.get('categoria', 'Otros')))
+    return jsonify({"mensaje": "✅"})
+
+@app.route('/api/servicios/<int:id>', methods=['PUT'])
+def editar_servicio(id):
+    d = request.json
+    db_query("UPDATE servicios SET icono=?, titulo=?, descripcion=?, imagen=? WHERE id=?", (d['icono'], d['titulo'], d['descripcion'], d.get('imagen',''), id))
+    return jsonify({"mensaje": "✅"})
+
+@app.route('/api/productos/<int:id>', methods=['PUT'])
+def editar_producto(id):
+    d = request.json
+    db_query("UPDATE productos SET nombre=?, precio=?, imagen=?, categoria=? WHERE id=?", (d['nombre'], d['precio'], d['imagen'], d.get('categoria', 'Otros'), id))
     return jsonify({"mensaje": "✅"})
 
 @app.route('/api/eliminar/<tabla>/<int:id>', methods=['DELETE'])
 def eliminar_item(tabla, id):
-    if tabla in ['servicios', 'productos', 'socios', 'resenas']:
-        db_query(f"DELETE FROM {tabla} WHERE id = ?", (id,))
+    db_query(f"DELETE FROM {tabla} WHERE id = ?", (id,))
     return jsonify({"mensaje": "🗑️"})
 
-if __name__ == "__main__":
-    # Render usa la variable de entorno PORT, esto es obligatorio para que no dé error
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+if __name__ == '__main__':
+    init_db()
+    app.run(debug=True, port=5001)
