@@ -3,7 +3,7 @@ from flask_cors import CORS
 import sqlite3
 import os
 
-# Configuración vital: static_folder='.' le dice que tus HTML están en la raíz
+# static_folder='.' le dice a Flask que tus archivos están en la carpeta principal
 app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
@@ -30,7 +30,7 @@ def init_db():
 
 init_db()
 
-# --- ESTAS SON LAS LÍNEAS QUE ARREGLAN EL "NOT FOUND" ---
+# --- ESTAS LÍNEAS ARREGLAN EL "NOT FOUND" ---
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
@@ -38,7 +38,7 @@ def index():
 @app.route('/admin')
 def admin():
     return app.send_static_file('admin.html')
-# -------------------------------------------------------
+# --------------------------------------------
 
 @app.route('/api/todo', methods=['GET'])
 def obtener_todo():
@@ -56,38 +56,7 @@ def obtener_todo():
         "config": config
     })
 
-@app.route('/api/config', methods=['POST'])
-def guardar_config():
-    d = request.json
-    for k, v in d.items():
-        db_query("INSERT OR REPLACE INTO configuracion (clave, valor) VALUES (?, ?)", (k, v))
-    return jsonify({"mensaje": "✅"})
-
-@app.route('/api/servicios', methods=['POST'])
-@app.route('/api/servicios/<int:id>', methods=['PUT'])
-def gestionar_servicio(id=None):
-    d = request.json
-    if request.method == 'POST':
-        db_query("INSERT INTO servicios (icono, titulo, descripcion, imagen) VALUES (?, ?, ?, ?)", (d['icono'], d['titulo'], d['descripcion'], d.get('imagen','')))
-    else:
-        db_query("UPDATE servicios SET icono=?, titulo=?, descripcion=?, imagen=? WHERE id=?", (d['icono'], d['titulo'], d['descripcion'], d.get('imagen',''), id))
-    return jsonify({"mensaje": "✅"})
-
-@app.route('/api/productos', methods=['POST'])
-@app.route('/api/productos/<int:id>', methods=['PUT'])
-def gestionar_producto(id=None):
-    d = request.json
-    if request.method == 'POST':
-        db_query("INSERT INTO productos (nombre, precio, imagen, categoria) VALUES (?, ?, ?, ?)", (d['nombre'], d['precio'], d['imagen'], d.get('categoria', 'Otros')))
-    else:
-        db_query("UPDATE productos SET nombre=?, precio=?, imagen=?, categoria=? WHERE id=?", (d['nombre'], d['precio'], d['imagen'], d.get('categoria', 'Otros'), id))
-    return jsonify({"mensaje": "✅"})
-
-@app.route('/api/eliminar/<tabla>/<int:id>', methods=['DELETE'])
-def eliminar_item(tabla, id):
-    if tabla in ['servicios', 'productos', 'socios', 'resenas']:
-        db_query(f"DELETE FROM {tabla} WHERE id = ?", (id,))
-    return jsonify({"mensaje": "🗑️"})
+# ... (Mantén el resto de tus rutas de la API igual)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
