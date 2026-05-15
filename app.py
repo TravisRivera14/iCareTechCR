@@ -3,7 +3,7 @@ from flask_cors import CORS
 import sqlite3
 import os
 
-# static_folder='.' le dice a Flask que tus archivos están en la carpeta principal
+# Configuración crucial: le dice a Flask que use la carpeta raíz para archivos estáticos
 app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
@@ -30,15 +30,19 @@ def init_db():
 
 init_db()
 
-# --- ESTAS LÍNEAS ARREGLAN EL "NOT FOUND" ---
+# --- RUTAS PRINCIPALES ---
+
 @app.route('/')
-def index():
+def home():
+    # Esto fuerza a Flask a entregar el index.html desde la raíz
     return app.send_static_file('index.html')
 
 @app.route('/admin')
-def admin():
+def admin_page():
+    # Esto fuerza a Flask a entregar el admin.html desde la raíz
     return app.send_static_file('admin.html')
-# --------------------------------------------
+
+# --- API (Asegúrate de que estas rutas se mantengan así) ---
 
 @app.route('/api/todo', methods=['GET'])
 def obtener_todo():
@@ -56,8 +60,40 @@ def obtener_todo():
         "config": config
     })
 
-# ... (Mantén el resto de tus rutas de la API igual)
+@app.route('/api/config', methods=['POST'])
+def guardar_config():
+    d = request.json
+    for k, v in d.items():
+        db_query("INSERT OR REPLACE INTO configuracion (clave, valor) VALUES (?, ?)", (k, v))
+    return jsonify({"mensaje": "✅"})
+
+@app.route('/api/servicios', methods=['POST'])
+@app.route('/api/servicios/<int:id>', methods=['PUT'])
+def gestionar_servicio(id=None):
+    d = request.json
+    if request.method == 'POST':
+        db_query("INSERT INTO servicios (icono, titulo, descripcion, imagen) VALUES (?, ?, ?, ?)", (d['icono'], d['titulo'], d['descripcion'], d.get('imagen','')))
+    else:
+        db_query("UPDATE servicios SET icono=?, titulo=?, descripcion=?, imagen=? WHERE id=?", (d['icono'], d['titulo'], d['descripcion'], d.get('imagen',''), id))
+    return jsonify({"mensaje": "✅"})
+
+@app.route('/api/productos', methods=['POST'])
+@app.route('/api/productos/<int:id>', methods=['PUT'])
+def gestionar_producto(id=None):
+    d = request.json
+    if request.method == 'POST':
+        db_query("INSERT INTO productos (nombre, precio, imagen, categoria) VALUES (?, ?, ?, ?)", (d['nombre'], d['precio'], d['imagen'], d.get('categoria', 'Otros')))
+    else:
+        db_query("UPDATE productos SET nombre=?, precio=?, imagen=?, categoria=? WHERE id=?", (d['nombre'], d['precio'], d['imagen'], d.get('categoria', 'Otros'), id))
+    return jsonify({"mensaje": "✅"})
+
+@app.route('/api/eliminar/<tabla>/<int:id>', methods=['DELETE'])
+def eliminar_item(tabla, id):
+    if tabla in ['servicios', 'productos', 'socios', 'resenas']:
+        db_query(f"DELETE FROM {tabla} WHERE id = ?", (id,))
+    return jsonify({"mensaje": "🗑️"})
 
 if __name__ == "__main__":
+    # Render usa la variable de entorno PORT, esto es obligatorio para que no dé error
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
